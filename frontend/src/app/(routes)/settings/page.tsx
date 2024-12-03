@@ -21,8 +21,6 @@ export default function SettingsPage() {
         return <ProfileSettings />;
       case 'history':
         return <HistorySettings />;
-      case 'reviews':
-        return <ReviewSettings />;
       case 'orders':
         return <OrderSettings />;
       case 'bookings':
