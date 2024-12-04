@@ -22,8 +22,8 @@ export default function SearchPage() {
         <>
             <Navbar />
             <div className="flex flex-col items-center justify-center">
-                <h1 className="text-4xl font-bold mb-4">Search Page</h1>
-                <p className="text-lg">This is the search page</p>
+                <h1 className="text-4xl font-bold mb-4">Lets Hunt for the Service</h1>
+                <h1 className="text-4xl font-bold mb-4">You Need!</h1>
                 <Command className="rounded-lg border shadow-md w-[400px]">
                 <CommandInput placeholder="Type a command or search..." />
                 </Command>
@@ -32,7 +32,9 @@ export default function SearchPage() {
             </div>
             <div className="flex flex-col items-center justify-start h-screen w-screen">
                 <Tabs defaultValue="recommendations" className="w-10/12">
+                <h1 className="text-4xl font-bold mb-4">Categories:</h1>
                 <TabsList>
+                    <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
                     <TabsTrigger value="Plumber">Plumber</TabsTrigger>
                     <TabsTrigger value="Electrical">Electrical</TabsTrigger>
                 </TabsList>

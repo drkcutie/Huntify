@@ -27,25 +27,14 @@ export default function SettingsPage() {
           return <ProfileSettings/>;
       } else if (selectedSetting === 'history') {
           return <HistorySettings/>;
-      } else if (selectedSetting === 'orders') {
-          return <OrderSettings/>;
+      } else if (selectedSetting === 'appointments') {
+          return <AppointmentSettings/>;
       } else if (selectedSetting === 'bookings') {
           return <BookingSettings/>;
       } else {
-          return <div>Please select a setting.</div>;
+          return <ProfileSettings/>;
       }
-    switch (selectedSetting) {
-      case 'profile':
-        return <ProfileSettings />;
-      case 'history':
-        return <HistorySettings />;
-      case 'orders':
-        return <OrderSettings />;
-      case 'bookings':
-        return <BookingSettings />;
-      default:
-        return <div>Please select a setting.</div>;
-    }
+    
   }
 
   // Placeholder components for each setting's content (replace with actual components or content)
@@ -153,7 +142,7 @@ export default function SettingsPage() {
             <Tabs defaultValue="bookings" className="w-[400px]">
             <TabsList>
             <TabsTrigger value="bookings">Bookings</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="appointments">Appointments</TabsTrigger>
             </TabsList>
             <TabsContent value="bookings">
             <div className="flex flex-row gap-4">
@@ -170,7 +159,7 @@ export default function SettingsPage() {
                 </div>
                     </div>
             </TabsContent>
-            <TabsContent value="orders">
+            <TabsContent value="appointments">
             <div className="flex flex-row gap-4">
             <div className="flex items-center space-x-4">
                     <img 
@@ -190,9 +179,9 @@ export default function SettingsPage() {
 
 
 
-  const OrderSettings = () => 
+  const AppointmentSettings = () => 
     <div className="flex flex-col gap-4 ">
-            <h2 className="text-xl font-bold">Orders</h2>
+            <h2 className="text-xl font-bold">Appointments</h2>
             <Tabs defaultValue="upcoming" className="w-[400px]">
         <TabsList>
             <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
