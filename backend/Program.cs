@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // Initialize User Database
-builder.Services.AddDbContext<UserContext>(opt => opt.UseInMemoryDatabase("User"));
+builder.Services.AddDbContext<SeekrDbContext>(opt => opt.UseInMemoryDatabase("User"));
 
 
 builder.Services.AddControllers();

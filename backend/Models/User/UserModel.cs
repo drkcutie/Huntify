@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using backend.Models.Posts;
 using backend.Validators;
 
 namespace backend.Models.User
@@ -35,10 +36,6 @@ namespace backend.Models.User
         [DataType(DataType.Password)] // Indicates this is a password
         public string? Password { get; set; } 
 
-        public AccountTypeEnum AccountType { get; set; } // Non-nullable enum
-
-        public DateOnly BirthDate { get; set; } 
-
         public DateOnly CreatedOn { get; set; } = DateOnly.FromDateTime(DateTime.Now); 
         
         public DateOnly UpdatedOn { get; set; } = DateOnly.FromDateTime(DateTime.Now);
@@ -47,11 +44,14 @@ namespace backend.Models.User
         public string? Biography { get; set; }
 
         public byte[]? ProfilePicture { get; set; }
+        
+        
+        //Relationships
+        public Client? Client { get; set; }
+        public ServiceProviderModel? ServiceProvider{ get; set; }
+        public ICollection<Post> Posts { get; } = new List<Post>();
+        public ICollection<Chat.Chat> Chats { get; } = new List<Chat.Chat>();
+        public ICollection<PostLike> PostLikes { get; } = new List<PostLike>();
     }
 
-    public enum AccountTypeEnum
-    {
-        Client,
-        ServiceProvider
-    }
 }

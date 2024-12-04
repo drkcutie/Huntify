@@ -12,7 +12,7 @@ public class EmailUniqueAttribute : ValidationAttribute
     protected override ValidationResult? IsValid(
         object? value, ValidationContext validationContext)
     {
-        var context = (UserContext)validationContext.GetService(typeof(UserContext))!;
+        var context = (SeekrDbContext)validationContext.GetService(typeof(SeekrDbContext))!;
         var entity = context?.Users.SingleOrDefault(e => value != null && e.Email == value.ToString());
 
         return entity != null ? new ValidationResult(GetErrorMessage(value?.ToString())) : ValidationResult.Success;
@@ -28,7 +28,7 @@ public class UserUniqueAttribute : ValidationAttribute
     protected override ValidationResult? IsValid(
         object? value, ValidationContext validationContext)
     {
-        var context = (UserContext)validationContext.GetService(typeof(UserContext))!;
+        var context = (SeekrDbContext)validationContext.GetService(typeof(SeekrDbContext))!;
         var entity = context?.Users.SingleOrDefault(e => value != null && e.Username == value.ToString());
 
         return entity != null ? new ValidationResult(GetErrorMessage(value?.ToString())) : ValidationResult.Success;

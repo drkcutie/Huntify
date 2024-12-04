@@ -20,7 +20,49 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <_ContentIncludedByDefault Remove="Views\Chat\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Chat\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Chat\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Chat\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Chat\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ChatMessage\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ChatMessage\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ChatMessage\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ChatMessage\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ChatMessage\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Client\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Client\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Client\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Client\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Client\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PostLike\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PostLike\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PostLike\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PostLike\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PostLike\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProvider\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProvider\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProvider\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProvider\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProvider\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProviderModel\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProviderModel\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProviderModel\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProviderModel\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\ServiceProviderModel\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserModel\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserModel\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserModel\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserModel\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserModel\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Views\" />
     </ItemGroup>
 
 </Project>

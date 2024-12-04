@@ -3,33 +3,37 @@ import Navbar from "@/components/large/NavBar";
 import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 export default function SettingsPage() {
   // State to keep track of the currently selected settings option
-  const [selectedSetting, setSelectedSetting] = useState(null);
+  const [selectedSetting, setSelectedSetting] = useState<string|null>("profile");
+  const [isClient, setIsClient] = useState<boolean>();
+  
+    useEffect(() => {
+        setIsClient(true); // Set to true after the initial render (client-side)
+    }, []);
 
   // Handlers for each settings option
-  const handleSettingClick = (setting) => {
+  const handleSettingClick = (setting : string) => {
     setSelectedSetting(setting);
   }
-
-  // Sample content for each setting (replace with actual content)
   const SettingContent = () => {
-    switch (selectedSetting) {
-      case 'profile':
-        return <ProfileSettings />;
-      case 'history':
-        return <HistorySettings />;
-      case 'reviews':
-        return <ReviewSettings />;
-      case 'orders':
-        return <OrderSettings />;
-      case 'bookings':
-        return <BookingSettings />;
-      default:
-        return <div>Please select a setting.</div>;
-    }
+      if(!isClient){
+          return null;
+      }
+      
+      if (selectedSetting === 'profile') {
+          return <ProfileSettings/>;
+      } else if (selectedSetting === 'history') {
+          return <HistorySettings/>;
+      } else if (selectedSetting === 'orders') {
+          return <OrderSettings/>;
+      } else if (selectedSetting === 'bookings') {
+          return <BookingSettings/>;
+      } else {
+          return <div>Please select a setting.</div>;
+      }
   }
 
   // Placeholder components for each setting's content (replace with actual components or content)
