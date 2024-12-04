@@ -1,3 +1,4 @@
+'use client'
 interface CardProps {
     icon: React.ReactNode;
     title: string;

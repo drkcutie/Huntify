@@ -15,7 +15,7 @@ import {
   } from "@/components/ui/command"
 
 
-    
+
 export default function SearchPage() {
 
     return (
@@ -27,7 +27,7 @@ export default function SearchPage() {
                 <Command className="rounded-lg border shadow-md w-[400px]">
                 <CommandInput placeholder="Type a command or search..." />
                 </Command>
-                
+
 
             </div>
             <div className="flex flex-col items-center justify-start h-screen w-screen">
@@ -41,7 +41,7 @@ export default function SearchPage() {
                 <TabsContent value="recommendations" className="py-10">
                     {/* Title: Latest Service Listing */}
                     <h2 className="text-2xl font-bold mb-4">Latest Service Listing</h2>
-                    
+
                     {/* Carousel for Latest Services */}
                     <div className="flex flex-row flex-nowrap justify-start h-[350px] items-center gap-6 overflow-x-scroll no-scrollbar snap-x snap-mandatory">
                         {(() => {
@@ -140,11 +140,11 @@ export default function SearchPage() {
                 </TabsContent>
                 </Tabs>
             </div>
-           
+
 
 
             <Footer />
-            
+
         </>
 
     )

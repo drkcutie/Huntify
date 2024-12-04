@@ -9,7 +9,7 @@ export default function SettingsPage() {
   // State to keep track of the currently selected settings option
   const [selectedSetting, setSelectedSetting] = useState<string|null>("profile");
   const [isClient, setIsClient] = useState<boolean>();
-  
+
     useEffect(() => {
         setIsClient(true); // Set to true after the initial render (client-side)
     }, []);
@@ -22,7 +22,7 @@ export default function SettingsPage() {
       if(!isClient){
           return null;
       }
-      
+
       if (selectedSetting === 'profile') {
           return <ProfileSettings/>;
       } else if (selectedSetting === 'history') {
@@ -41,7 +41,7 @@ export default function SettingsPage() {
   const ProfileSettings = () => 
         <div className="space-y-8">
             <h2 className="text-2xl font-bold">Profile</h2>
-            
+
             <div className="flex items-center space-x-4">
             <img 
                 src="https://via.placeholder.com/100" 
@@ -52,7 +52,7 @@ export default function SettingsPage() {
                 <h2 className="text-2xl font-bold">John Doe</h2> 
             </div>
             </div>
-    
+
             <div>
             <h3 className="text-lg font-medium">Status & Recently</h3>
             <div className="text-gray-600"> 
@@ -60,7 +60,7 @@ export default function SettingsPage() {
                 <p>Recently: Logged in 3 hours ago</p>
             </div>
             </div>
-    
+
             {/* About Section */}
             <div>
             <h2 className="text-xl font-bold">About</h2>
@@ -69,7 +69,7 @@ export default function SettingsPage() {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.
             </p>
             </div>
-    
+
             {/* Phone Details */}
             <div>
             <h3 className="text-lg font-medium">Phone</h3>
@@ -77,7 +77,7 @@ export default function SettingsPage() {
                 +1 123 456 7890
             </p>
             </div>
-    
+
             {/* Email Address */}
             <div>
             <h3 className="text-lg font-medium">Email</h3>
@@ -85,7 +85,7 @@ export default function SettingsPage() {
                 <a href="mailto:johndoe@example.com">johndoe@example.com</a>
             </p>
             </div>
-    
+
             {/* Address Section */}
             <div>
             <h2 className="text-xl font-bold">Address</h2>
@@ -94,7 +94,7 @@ export default function SettingsPage() {
                 123 Main St, Anytown, USA 12345
             </p>
             </div>
-    
+
             {/* Additional Details */}
             <div>
             <h3 className="text-lg font-medium">Additional Details</h3>
@@ -102,12 +102,12 @@ export default function SettingsPage() {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.
             </p>
             </div>
-    
+
             {/* Seeker Details Section */}
             <div>
             <h2 className="text-xl font-bold">Seeker Details</h2>
             <div className="h-2"></div> 
-            
+
             {/* Date of Birth Details */}
             <div>
                 <h3 className="text-lg font-medium">Date of Birth</h3>
@@ -115,7 +115,7 @@ export default function SettingsPage() {
                 January 1, 1990
                 </p>
             </div>
-    
+
             {/* National ID Details */}
             <div>
                 <h3 className="text-lg font-medium">National ID</h3>
@@ -123,7 +123,7 @@ export default function SettingsPage() {
                 XXX-XX-1234
                 </p>
             </div>
-    
+
             {/* Job Details */}
             <div>
                 <h3 className="text-lg font-medium">Job</h3>
@@ -133,9 +133,9 @@ export default function SettingsPage() {
             </div>
             </div>
         </div>    
-        
 
-  
+
+
   const HistorySettings = () => 
                 <div className="flex flex-col gap-4 ">
             <h2 className="text-xl font-bold">History</h2>
@@ -279,11 +279,11 @@ export default function SettingsPage() {
                onClick={() => handleSettingClick('bookings')} >Bookings</p>
           </div>
         </section>
-        <section id='right' className='w-2/3 ml-20'>
+        <span id='right' className='w-2/3 ml-20'>
           <SettingContent />
-        </section>
+        </span>
       </div>
-      
+
       <Footer />
     </>
   )
