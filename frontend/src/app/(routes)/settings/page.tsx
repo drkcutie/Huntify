@@ -34,6 +34,18 @@ export default function SettingsPage() {
       } else {
           return <div>Please select a setting.</div>;
       }
+    switch (selectedSetting) {
+      case 'profile':
+        return <ProfileSettings />;
+      case 'history':
+        return <HistorySettings />;
+      case 'orders':
+        return <OrderSettings />;
+      case 'bookings':
+        return <BookingSettings />;
+      default:
+        return <div>Please select a setting.</div>;
+    }
   }
 
   // Placeholder components for each setting's content (replace with actual components or content)
