@@ -13,13 +13,13 @@ public class ServiceOrder
     public int ServiceId { get; set; }
 
     // Navigation property to Service
-    public Service.Service Service { get; set; }
+    public Service.Service Service { get; set; } = null!;
 
     [ForeignKey("Client")]
     public int ClientId { get; set; }
 
     // Navigation property to Client
-    public Client Client { get; set; }
+    public Client Client { get; set; } = null!;
 
     public DateTime ServiceStartDateTime { get; set; }
 

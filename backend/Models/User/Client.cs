@@ -16,8 +16,8 @@ public class Client
     
     
     //Relationships
-    public ICollection<ServiceOrder> ServiceOrders { get; } = new List<ServiceOrder>();
-    public ICollection<Review> Reviews{ get; } = new List<Review>();
+    public ICollection<ServiceOrder>? ServiceOrders { get; } 
+    public ICollection<Review>? Reviews{ get; } 
 
 
 

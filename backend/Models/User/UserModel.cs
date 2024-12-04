@@ -43,15 +43,15 @@ namespace backend.Models.User
         [MaxLength(255)]
         public string? Biography { get; set; }
 
-        public byte[]? ProfilePicture { get; set; }
+        public String ProfilePicture { get; set; } = "";
         
         
         //Relationships
-        public Client? Client { get; set; }
-        public ServiceProviderModel? ServiceProvider{ get; set; }
-        public ICollection<Post> Posts { get; } = new List<Post>();
-        public ICollection<Chat.Chat> Chats { get; } = new List<Chat.Chat>();
-        public ICollection<PostLike> PostLikes { get; } = new List<PostLike>();
+        public Client? Client { get; set; } 
+        public ServiceProviderModel? ServiceProvider { get; set; } 
+        public ICollection<Post>? Posts { get; set; } 
+        public ICollection<Chat.Chat>? Chats { get; set; } 
+        public ICollection<PostLike>? PostLikes { get; set; } 
     }
 
 }
