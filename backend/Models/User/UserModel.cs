@@ -35,6 +35,9 @@ namespace backend.Models.User
         [Required]
         [DataType(DataType.Password)] // Indicates this is a password
         public string? Password { get; set; } 
+        
+        [Required]
+        public DateOnly DateOfBirth { get; set; } 
 
         public DateOnly CreatedOn { get; set; } = DateOnly.FromDateTime(DateTime.Now); 
         

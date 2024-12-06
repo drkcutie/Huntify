@@ -24,8 +24,8 @@ namespace backend.Models.User
         public string ResumePath { get; set; } = string.Empty;
 
         // Navigation properties for related entities
-        public ICollection<Review>? Reviews { get; set; } = null;
-        public ICollection<Service.Service>? Services { get; set; } = null!;
-        public ICollection<ServiceProviderSkill> ServiceProviderSkills { get; set; } = new List<ServiceProviderSkill>();
+        public ICollection<Review>? Reviews { get; set; } = new List<Review>();
+        public ICollection<Service.Service>? Services { get; set; } = new List<Service.Service>();
+        public ICollection<ServiceProviderSkill>? ServiceProviderSkills { get; set; } = new List<ServiceProviderSkill>();
     }
 }
