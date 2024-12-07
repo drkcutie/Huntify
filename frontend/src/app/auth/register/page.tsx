@@ -20,8 +20,12 @@ import {format} from "date-fns";
 const formSchema = zod.object({
     firstName: zod.string().min(2).max(40),
     lastName: zod.string().min(2).max(40),
-    birthDate: zod.date(),
-    emailAddress: zod.string().email(),
+    dateOfBirth: zod.date().refine((data) => {
+        return data > new Date(1950, 0, 1) && data < new Date(2023, 1, 1, );
+    }, {
+        message: 'Date must be valid and in the past, after January 1, 1950.',
+    }),
+    email: zod.string().email(),
     username: zod.string().min(6, { message: "Username must be at least 6 characters long." }),
     password: zod.string().min(6, { message: 'Password must be at least 6 characters long.' }),
     passwordConfirm: zod.string(),
@@ -48,8 +52,8 @@ export default function RegisterPage() {
         defaultValues: {
             firstName: "",
             lastName: "",
-            birthDate : new Date(),
-            emailAddress: "",
+            dateOfBirth: new Date(),
+            email: "",
             username: "",
             password: "",
             passwordConfirm: "",
@@ -60,30 +64,35 @@ export default function RegisterPage() {
     
 
     const handleSubmit = async (values: zod.infer<typeof formSchema>) => {
-        console.log(values);
-        // try {
-        //     const response = await fetch('/api/User', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(values),
-        //     });
-        //
-        //     if (response.status === 201) {
-        //         // Successfully Registered
-        //         console.log("User registered successfully.");
-        //         redirect('/auth/login');
-        //     } else if (response.status === 400) {
-        //         // Error, not registered
-        //         const errorData = await response.json();
-        //         if (errorData.errors) {
-        //             console.error("Error registering user:", errorData.errors);
-        //         }
-        //     }
-        // } catch (error) {
-        //     console.error('Error: ', error);
-        // }
+        try {
+            const response = await fetch('/api/User', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    email: values.email,
+                    username: values.username,
+                    password: values.password,
+                    dateOfBirth: values.dateOfBirth,
+                }),
+            });
+            if (response.status === 201) {
+                // Successfully Registered
+                console.log("User registered successfully.");
+                redirect('/auth/login');
+            } else if (response.status === 400) {
+                // Error, not registered
+                const errorData = await response.json();
+                if (errorData.errors) {
+                    console.error("Error registering user:", errorData.errors);
+                }
+            }
+        } catch (error) {
+            console.error('Error: ', error);
+        }
     };
 
     return (
@@ -150,7 +159,7 @@ export default function RegisterPage() {
                                                 <FormMessage />
                                             </FormItem>
                                         );
-                                    }} name="birthDate" control={form.control} />
+                                    }} name="dateOfBirth" control={form.control} />
 
                                     <FormField render={({ field }) => {
                                         return <FormItem className='w-full'>
@@ -160,7 +169,7 @@ export default function RegisterPage() {
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
-                                    }} name="emailAddress" control={form.control} />
+                                    }} name="email" control={form.control} />
                                     <FormField render={({ field }) => {
                                         return <FormItem className='w-full'>
                                             <FormLabel>Username</FormLabel>

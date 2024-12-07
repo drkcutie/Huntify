@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using backend.Models.User;
+using NuGet.Protocol;
 
 namespace backend.Validators;
 
@@ -23,8 +24,7 @@ public class EmailUniqueAttribute : ValidationAttribute
     }
 }
 
-public class UserUniqueAttribute : ValidationAttribute
-{
+public class UserUniqueAttribute : ValidationAttribute {
     protected override ValidationResult? IsValid(
         object? value, ValidationContext validationContext)
     {
@@ -38,3 +38,33 @@ public class UserUniqueAttribute : ValidationAttribute
         return $"Username {username} is already in use.";
     }
 }
+public class  SkillUniqueAttribute : ValidationAttribute {
+    protected override ValidationResult? IsValid(
+        object? value, ValidationContext validationContext)
+    {
+        var context = (SeekrDbContext)validationContext.GetService(typeof(SeekrDbContext))!;
+        var entity = context?.Skills.SingleOrDefault(e => value != null && e.SkillName== value.ToString());
+
+        return entity != null ? new ValidationResult(GetErrorMessage(value?.ToString())) : ValidationResult.Success;
+    }
+    private string GetErrorMessage(string? skill)
+    {
+        return $"Skill {skill} is already in use.";
+    }
+}
+
+public class  ServiceUniqueAttribute : ValidationAttribute {
+    protected override ValidationResult? IsValid(
+        object? value, ValidationContext validationContext)
+    {
+        var context = (SeekrDbContext)validationContext.GetService(typeof(SeekrDbContext))!;
+        var entity = context?.Services.SingleOrDefault(e => value != null && e.ServiceType== value.ToString());
+
+        return entity != null ? new ValidationResult(GetErrorMessage(value?.ToString())) : ValidationResult.Success;
+    }
+    private string GetErrorMessage(string? service)
+    {
+        return $"Service {service} is already in use.";
+    }
+}
+

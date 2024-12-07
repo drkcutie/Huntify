@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using backend.Models.Skills_and_Reviews;
 using backend.Models.Service;
+using backend.Models.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace backend.Models.User
@@ -11,6 +12,7 @@ namespace backend.Models.User
         // Primary key
         [Key]
         public int ServiceProviderId { get; set; }
+        
 
         // Foreign key reference to UserModel
         [ForeignKey("UserModel")]
@@ -27,5 +29,7 @@ namespace backend.Models.User
         public ICollection<Review>? Reviews { get; set; } = new List<Review>();
         public ICollection<Service.Service>? Services { get; set; } = new List<Service.Service>();
         public ICollection<ServiceProviderSkill>? ServiceProviderSkills { get; set; } = new List<ServiceProviderSkill>();
+        
+        public ICollection<ProviderService>? ProviderServices { get; set; } = new List<ProviderService>();
     }
 }

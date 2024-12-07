@@ -1,22 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+      <UserSecretsId>0e309985-4f9a-41a3-8a10-f0e021770db9</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -63,6 +66,14 @@
 
     <ItemGroup>
       <Folder Include="Views\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\UserModel\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserModel\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserModel\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserModel\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserModel\Index.cshtml" />
     </ItemGroup>
 
 </Project>

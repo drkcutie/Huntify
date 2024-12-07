@@ -1,5 +1,7 @@
+using System.Configuration;
 using backend.Models.Chat;
 using backend.Models.Posts;
+using backend.Models.Services;
 using backend.Models.Skills_and_Reviews;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,11 @@ namespace backend.Models.User
         public SeekrDbContext(DbContextOptions<SeekrDbContext> options) : base(options)
         {
         }
+        
+        
+        
+        
+        
 
         // DbSets representing the database tables for each model
         public DbSet<UserModel> Users { get; set; }
@@ -18,6 +25,8 @@ namespace backend.Models.User
 
         public DbSet<Service.Service> Services { get; set; }
         public DbSet<ServiceOrder> ServiceOrder { get; set; }
+        
+        public DbSet<ProviderService> ProviderServices { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Skill> Skills { get; set; }
@@ -88,12 +97,16 @@ namespace backend.Models.User
                 .HasForeignKey(ss => ss.ServiceProviderId) // Foreign key in ServiceProviderSkill table
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete on service provider deletion
 
-            // One-to-Many relationship: ServiceProvider and Services
+            // One-to-Many relationship: ServiceProvider and ProviderServices 
             modelBuilder.Entity<ServiceProviderModel>()
-                .HasMany(s => s.Services)
-                .WithOne(sv => sv.ServiceProvider)
-                .HasForeignKey(sv => sv.ServiceProviderId) // Foreign key in Service table
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete on service provider deletion
+                .HasMany(s => s.ProviderServices)
+                .WithOne(ss => ss.ServiceProvider)
+                .HasForeignKey(ss =>ss.ServiceProviderId).OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Service.Service>()
+                .HasMany(s => s.ProviderServices)
+                .WithOne(ss => ss.Service)
+                .HasForeignKey(ss =>ss.ServiceId).OnDelete(DeleteBehavior.Restrict);
 
             // One-to-Many relationship: Skill and ServiceProviderSkills
             modelBuilder.Entity<Skill>()
