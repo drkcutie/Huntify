@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import * as zod from 'zod';
-import { useForm } from "react-hook-form";
+import {useForm, useFormState} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -41,6 +41,7 @@ const role: string[] = ['Client', 'Service Provider'];
 
 
 export default function RegisterPage() {
+    const [state, action] = useFormState(signup, undefined)
 
     //Testing Date
     useEffect(() => {
@@ -63,37 +64,7 @@ export default function RegisterPage() {
     });
     
 
-    const handleSubmit = async (values: zod.infer<typeof formSchema>) => {
-        try {
-            const response = await fetch('/api/User', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.email,
-                    username: values.username,
-                    password: values.password,
-                    dateOfBirth: values.dateOfBirth,
-                }),
-            });
-            if (response.status === 201) {
-                // Successfully Registered
-                console.log("User registered successfully.");
-                redirect('/auth/login');
-            } else if (response.status === 400) {
-                // Error, not registered
-                const errorData = await response.json();
-                if (errorData.errors) {
-                    console.error("Error registering user:", errorData.errors);
-                }
-            }
-        } catch (error) {
-            console.error('Error: ', error);
-        }
-    };
+    
 
     return (
         <>
