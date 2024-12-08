@@ -59,7 +59,7 @@ namespace backend.Models.User
 
     public enum AccountType
     {
-        Client,
+        Client, 
         ServiceProvider
     }
 

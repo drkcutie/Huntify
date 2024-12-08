@@ -1,12 +1,22 @@
 import Cookies from 'js-cookie';
+import {redirect} from "next/navigation";
 
 interface LoginRequest {
     username: string;
     password: string;
 }
 
+interface RegisterRequest {
+    firstName : string;
+    lastName : string;
+    email : string;
+    dateOfBirth : string |null;
+    username: string;
+    password: string;
+    accountType : number;
+}
+
 function handleCookie(response: Response) {
-    
     response.json().then((data) => {
         if (data.token) {
             Cookies.set('currentUser', data.token, { expires: 1 / 24 });
@@ -17,6 +27,7 @@ function handleCookie(response: Response) {
 }
 
 export async function loginUser(data: LoginRequest) {
+    console.log(data);
     try {
         const response = await fetch('http://localhost:5000/api/login', {
             method: 'POST',
@@ -60,3 +71,19 @@ export async function GET(request: Request) {
         return new Response(JSON.stringify({ message: 'Error occurred' }), { status: 500 });
     }
 }
+
+export async function registerUser(data: RegisterRequest) {
+    let message = null;
+    try {
+        const response = await fetch('http://localhost:5000/api/UserModel/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data), // Send data as JSON
+        });
+    } catch (error) {
+        // console.error('Error logging in:', message);
+    } 
+}
+
