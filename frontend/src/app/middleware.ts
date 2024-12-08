@@ -9,17 +9,14 @@ export default function middleware(request:  NextRequest){
     const isLoggedIn = false
     const currentUser = request.cookies.get('currentUser')?.value
 
-    if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
+    if (currentUser && !request.nextUrl.pathname.startsWith('/home')) {
         return Response.redirect(new URL('/home', request.url))
     }
-
-    if (!currentUser && !request.nextUrl.pathname.startsWith('/login')) {
-        return Response.redirect(new URL('/login', request.url))
+    if (!currentUser && !request.nextUrl.pathname.startsWith('/auth/login')) {
+        return Response.redirect(new URL('/auth/login', request.url))
     }
     
 }
-
-
 export const config = {
     matcher: '/about/:path*',
 }

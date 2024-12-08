@@ -57,7 +57,7 @@ namespace backend.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_super_secret_key"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_very_long_secret_key_of_at_least_32_bytes!"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
@@ -102,13 +102,13 @@ namespace backend.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserModel>> Login([FromBody] UserModel userModel)
+        public async Task<ActionResult<UserModel>> Login([FromBody] LoginDTO userModel)
         {
             //Administrator access
             string? token;
-            if (userModel is { Username: "admin", Password: "admin" })
+            if (userModel is { Username: "admin123", Password: "admin123" })
             {
-                token = GenerateJwtToken(userModel.Username);
+                token = GenerateJwtToken("admin123");
                 return Ok(new { token });
             }
 
@@ -132,31 +132,65 @@ namespace backend.Controllers
             }
 
             token = GenerateJwtToken(user.Username!);
-            return Ok(new { token });
+            return Ok(new {token});
         }
 
         [HttpPost("register")]
-        [Authorize]
-        public async Task<ActionResult<UserModel>> Register([FromBody] UserModel userModel)
+        public async Task<ActionResult<UserModel>> Register([FromBody] RegisterDTO registerDto)
         {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username
+                == registerDto.Username || u.Email == registerDto.Email);
+            if (existingUser is not null)
+            {
+                return BadRequest("Username or email is already taken");
+            }
+            var userModel = new UserModel
+            {
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                DateOfBirth = registerDto.DateOfBirth,
+                Email = registerDto.Email,
+                Username = registerDto.Username,
+                Password = registerDto.Password
+                
+                
+
+            };
+            //Hash Password
             var passwordHasher = new PasswordHasher<UserModel>();
-            
-            userModel.Password = passwordHasher.HashPassword(userModel, userModel.Password!);
-            
+            userModel.Password = passwordHasher.HashPassword(userModel , registerDto.Password!);
+            registerClientOrServiceProvider(registerDto, userModel);
             
             _context.Users.Add(userModel);
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception e )
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "An error occurred while registering user");
             }
             
-            
-            
             return Ok(new {Message = "User registered successfully "} );
+        }
+
+        private static void registerClientOrServiceProvider(RegisterDTO registerDto, UserModel userModel)
+        {
+            if (registerDto.AccountType == AccountType.Client)
+            {
+                userModel.Client  = new Client
+                {
+                    User = userModel
+                };
+            }
+            else
+            {
+                userModel.ServiceProvider = new ServiceProviderModel 
+                {
+                    User = userModel
+                };
+            }
+            
         }
 
         // DELETE: api/UserModel/5
