@@ -1,6 +1,5 @@
 'use client'
 import React from "react";
-import { useEffect } from'react';
 import Navbar from "@/components/large/NavBar";
 import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -49,11 +48,11 @@ export default function SearchPage() {
     const [activeTab, setActiveTab] = React.useState('recommendations');
     const [key, setKey] = React.useState(0);
 
-    useEffect(() => {
+    React.useEffect(() => {
         setKey(key + 1);
     }, [activeTab]);    
 
-    useEffect(() => {
+    React.useEffect(() => {
         const fetchData = async () => {
             try {
                 const [servicesResponse, skillsResponse] = await Promise.all([
