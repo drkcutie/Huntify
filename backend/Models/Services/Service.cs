@@ -19,6 +19,7 @@ public class Service
     public string Title { get; set; } = "";
 
     public string Description { get; set; } = "";
+    public string Image { get; set; } = "";
 
     // Relationships
     public ICollection<ServiceOrder> ServiceOrders { get; } = new List<ServiceOrder>();
