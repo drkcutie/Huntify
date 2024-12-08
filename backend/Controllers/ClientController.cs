@@ -82,6 +82,22 @@ namespace backend.Controllers
 
             return CreatedAtAction("GetClient", new { id = client.ClientId }, client);
         }
+        
+        [HttpPost("registerClient")]
+        public async Task<ActionResult<Client>> RegisterClient(RegisterClientDto registerClientDto)
+        {
+            var client = new Client
+            {
+                UserId = registerClientDto.UserId
+
+            };
+            
+            
+            _context.Clients.Add(client);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetClient", new { id = client.ClientId }, client);
+        }
 
         // DELETE: api/Client/5
         [HttpDelete("{id}")]

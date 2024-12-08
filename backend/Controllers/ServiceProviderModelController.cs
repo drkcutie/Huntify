@@ -77,6 +77,21 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceProviderModel>> PostServiceProviderModel(ServiceProviderModel serviceProviderModel)
         {
+            serviceProviderModel.UserId = 1;
+            
+            _context.ServiceProviders.Add(serviceProviderModel);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetServiceProviderModel", new { id = serviceProviderModel.ServiceProviderId }, serviceProviderModel);
+        }
+        //POST: register a service provider
+        [HttpPost("registerServiceProvider")]
+        public async Task<ActionResult<ServiceProviderModel>> RegisterServiceProvider(RegisterServiceProviderDto registerServiceProviderDto)
+        {
+            var serviceProviderModel = new ServiceProviderModel
+            {
+                UserId = registerServiceProviderDto.UserId
+            };
             _context.ServiceProviders.Add(serviceProviderModel);
             await _context.SaveChangesAsync();
 

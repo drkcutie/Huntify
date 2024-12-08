@@ -106,11 +106,11 @@ namespace backend.Controllers
         {
             //Administrator access
             string? token;
-            if (userModel is { Username: "admin123", Password: "admin123" })
-            {
-                token = GenerateJwtToken("admin123");
-                return Ok(new { token });
-            }
+            // if (userModel is { Username: "admin123", Password: "admin123" })
+            // {
+            //     token = GenerateJwtToken("admin123");
+            //     return Ok(new { token });
+            // }
 
             if (string.IsNullOrEmpty(userModel.Username) || string.IsNullOrEmpty(userModel.Password))
             {
@@ -142,7 +142,7 @@ namespace backend.Controllers
                 == registerDto.Username || u.Email == registerDto.Email);
             if (existingUser is not null)
             {
-                return BadRequest("Username or email is already taken");
+                return BadRequest(new {Message = "User already exists"});
             }
             var userModel = new UserModel
             {
