@@ -63,6 +63,7 @@ export default function SearchPage() {
 
                 const servicesData = await servicesResponse.json();
                 const skillsData = await skillsResponse.json();
+                console.log("Data Taken: "+ servicesData);
                 setService(servicesData);
                 setSkill(skillsData);
                 setLoading(false);
