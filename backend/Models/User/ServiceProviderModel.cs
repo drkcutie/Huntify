@@ -32,4 +32,8 @@ namespace backend.Models.User
         
         public ICollection<ProviderService>? ProviderServices { get; set; } = new List<ProviderService>();
     }
+    public class RegisterServiceProviderDto
+    {
+        [Required] public int UserId { get; set; }
+    }
 }

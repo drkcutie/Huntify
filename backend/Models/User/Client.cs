@@ -18,8 +18,10 @@ public class Client
     //Relationships
     public ICollection<ServiceOrder>? ServiceOrders { get; } 
     public ICollection<Review>? Reviews{ get; } 
+}
 
-
-
-
+public class RegisterClientDto
+{
+    [Required] public int UserId { get; set; }
+    
 }
