@@ -31,7 +31,6 @@ export default function LoginPage() {
                 username : values.username,
                 password : values.password
             })
-            console.log(result);
         }catch (error: any){
             // console.error("Login failed: ", error.message || "An error occurred");
         }
@@ -82,8 +81,8 @@ export default function LoginPage() {
                         <Link href="/auth/register" className="font-bold"> Register</Link>
                     </p>
                 </div>
-                <div className="w-1/2 h-full border-black shadow flex flex-col area bg-gradient-to-r from-green-800 via-green-900 to-green-950">
-                    <div id="right"  className="">
+                <div className="w-1/2 h-full border-black shadow flex flex-col">
+                    <div id="right" className=" w-full bg-green-900">
                     </div>
                 </div>
             </div>
