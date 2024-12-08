@@ -13,9 +13,9 @@ public class Service
     [Key]
     public int ServiceId { get; set; }
     
-    [ServiceUnique] 
     public string ServiceType { get; set; } = "General";
 
+    [ServiceUnique]
     public string Title { get; set; } = "";
 
     public string Description { get; set; } = "";

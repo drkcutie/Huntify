@@ -14,7 +14,7 @@ import Link from "next/link";
 
 export default function Home() {
     return (
-        <div className='w-full border-black border-2 flex flex-row p-5 pr-10 pl-10 justify-between items-center'>
+        <div className='w-screen border-black border-2 flex flex-row p-5 pr-10 pl-10 justify-between items-center'>
 
             <Link href={'/home'}>
                 <p className='text-2xl font-bold font-mono'>Seekr</p>
