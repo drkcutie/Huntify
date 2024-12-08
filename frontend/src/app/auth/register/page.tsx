@@ -41,7 +41,6 @@ const role: string[] = ['Client', 'Service Provider'];
 
 
 export default function RegisterPage() {
-    const [state, action] = useFormState(signup, undefined)
 
     //Testing Date
     useEffect(() => {
@@ -63,6 +62,11 @@ export default function RegisterPage() {
         }
     });
     
+    const handleSubmit = async (data: zod.infer<typeof formSchema>) => {
+
+        
+        
+    }
 
     
 
