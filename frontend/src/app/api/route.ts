@@ -4,6 +4,13 @@ interface LoginRequest {
     username: string;
     password: string;
 }
+interface ProviderService{
+    providerServiceId: number;
+    serviceProviderId: number;
+    serviceProvider: string;
+    serviceId: number;
+    service: string;
+}
 
 function handleCookie(response: Response) {
     
@@ -58,5 +65,27 @@ export async function GET(request: Request) {
     } catch (error) {
         console.error('Error during GET request:', error);
         return new Response(JSON.stringify({ message: 'Error occurred' }), { status: 500 });
+    }
+}
+
+export async function PostService(data: ProviderService) {
+    try {
+        const response = await fetch('http://localhost:5000/api/ProviderService', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data), // Send data as JSON
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to login');
+        }
+        handleCookie(response);
+        return await response.json(); 
+    } catch (error) {
+        console.error('Error logging in:', error);
+        throw error; // Re-throw to handle it in the calling function
     }
 }
