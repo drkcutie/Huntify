@@ -11,6 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNextJS",
+        builder => builder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // Initialize User Database
@@ -65,6 +75,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowNextJS");
 
 app.UseAuthorization();
 
