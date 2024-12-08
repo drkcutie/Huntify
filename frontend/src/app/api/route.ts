@@ -102,6 +102,7 @@ export async function registerUser(data: RegisterRequest) {
 
         const result = await response.json();
         console.log(result);
+        redirect('/auth/login');
          return result
 
     } catch (error: any) {
