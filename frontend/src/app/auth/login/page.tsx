@@ -31,13 +31,10 @@ export default function LoginPage() {
                 username : values.username,
                 password : values.password
             })
-            console.error("Login successful: ",result);
+            console.log(result);
         }catch (error: any){
-            console.error("Login failed: ", error.message || "An error occurred");
+            // console.error("Login failed: ", error.message || "An error occurred");
         }
-        
-        
-
     };
 
     return (
@@ -70,7 +67,7 @@ export default function LoginPage() {
                                         <FormItem className="w-full">
                                             <FormLabel>Password</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Password" {...field} />
+                                                <Input type = 'password' placeholder="Password" {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -85,11 +82,8 @@ export default function LoginPage() {
                         <Link href="/auth/register" className="font-bold"> Register</Link>
                     </p>
                 </div>
-                <div className="w-1/2 h-full border-black shadow flex flex-col">
-                    <div id="right" className="area">
-                        <ul className="circles">
-                            {Array.from({length: 19}, (_, i) => <li key={i}></li>)}
-                        </ul>
+                <div className="w-1/2 h-full border-black shadow flex flex-col area bg-gradient-to-r from-green-800 via-green-900 to-green-950">
+                    <div id="right"  className="">
                     </div>
                 </div>
             </div>

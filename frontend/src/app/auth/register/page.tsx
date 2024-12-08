@@ -61,12 +61,8 @@ export default function RegisterPage() {
                 accountType: values.accountType == "Client" ? 0: 1, 
                 password: values.password,
             });
-            console.log('Register successful: ', result);
         } catch (error: any) {
-            console.log("Register Failed")
         }
-        
-            redirect('/auth/login');
     };
 
     return (

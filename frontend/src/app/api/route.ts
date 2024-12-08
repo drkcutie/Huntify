@@ -1,5 +1,8 @@
+'use server'
 import Cookies from 'js-cookie';
+import { cookies } from 'next/headers';
 import {redirect} from "next/navigation";
+import {FaL} from "react-icons/fa6";
 
 interface LoginRequest {
     username: string;
@@ -16,20 +19,24 @@ interface RegisterRequest {
     accountType : number;
 }
 
-function handleCookie(response: Response) {
-    response.json().then((data) => {
-        if (data.token) {
-            Cookies.set('currentUser', data.token, { expires: 1 / 24 });
-        }
-    }, (error) => {
-        console.error('Failed to parse the body', error);
-    });
+export async function createCookies(data: any) {
+    const cookieStore = await cookies()
+    cookieStore.set({
+        name: 'currentUser',
+        value: data.token,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: true,
+        path: '/',
+    })
+    redirect('/home');
 }
-
+export async function deleteCookie() {
+    (await cookies()).delete('currentUser');
+}
 export async function loginUser(data: LoginRequest) {
-    console.log(data);
     try {
-        const response = await fetch('http://localhost:5000/api/login', {
+        const response = await fetch('http://localhost:5000/api/UserModel/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,10 +48,10 @@ export async function loginUser(data: LoginRequest) {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to login');
         }
-        handleCookie(response);
-        return await response.json(); 
+        const result = await response.json();
+        await createCookies(result);
     } catch (error) {
-        console.error('Error logging in:', error);
+        // console.error('Error logging in:', error);
         throw error; // Re-throw to handle it in the calling function
     }
 }
@@ -73,7 +80,6 @@ export async function GET(request: Request) {
 }
 
 export async function registerUser(data: RegisterRequest) {
-    let message = null;
     try {
         const response = await fetch('http://localhost:5000/api/UserModel/register', {
             method: 'POST',
@@ -82,8 +88,20 @@ export async function registerUser(data: RegisterRequest) {
             },
             body: JSON.stringify(data), // Send data as JSON
         });
-    } catch (error) {
-        // console.error('Error logging in:', message);
-    } 
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to register user');
+        }
+
+        const result = await response.json();
+        console.log(result);
+         return result
+
+    } catch (error: any) {
+        console.error('Error during registration:', error.message || error);
+        throw error; // Re-throw to handle it in the calling function
+    }
 }
+
 
