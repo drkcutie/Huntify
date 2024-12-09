@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useRef } from "react"
 import { Minus, Plus, Search, ShoppingCart, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -55,6 +56,7 @@ export function ServiceCart() {
   const [quantities, setQuantities] = React.useState<{ [key: number]: number }>(
     services.reduce((acc, service) => ({ ...acc, [service.id]: 1 }), {})
   )
+  const router = useRouter()
 
   const updateQuantity = (id: number, delta: number) => {
     setQuantities((prev) => ({
@@ -67,6 +69,10 @@ export function ServiceCart() {
     (total, service) => total + service.discountedPrice * quantities[service.id],
     0
   )
+
+  const handleBuyNow = () => {
+    router.push('/checkout')
+  }
 
   return (
     <div ref={containerRef} className="container mx-auto py-8">
@@ -177,9 +183,9 @@ export function ServiceCart() {
               <div className="text-lg font-semibold">
                 Total: ${totalPrice}
               </div>
-              <Button size="lg">
+              <Button size="lg" onClick={handleBuyNow}>
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
+                Buy Now
               </Button>
             </div>
           </div>

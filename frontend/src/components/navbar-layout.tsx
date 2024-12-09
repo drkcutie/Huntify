@@ -167,11 +167,12 @@ const data = {
 
 export default function NavbarLayout({ children }: { children: React.ReactNode }) {
   return ( 
-    <div className="w-full flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full">
-        <div className="w-full pl-10 pr-10 flex h-14 items-center justify-between">
-          <div className="flex items-center space-x-4 ">
-            <Link href="/" className="flex items-center space-x-2 ">
+    <div className="w-full flex min-h-screen flex-col ">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="w-full pr-5 pl-5 flex h-14 items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link href="/home" className="flex items-center space-x-2">
+              
               <GalleryVerticalEnd className="h-6 w-6" />
               <span className="font-bold">Seekr</span>
             </Link>
