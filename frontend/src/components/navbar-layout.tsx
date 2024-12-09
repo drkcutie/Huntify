@@ -245,7 +245,7 @@ function UserMenu() {
   }
   
   function handleSetting(){
-
+      redirect('/settings');
   }
 
   return (
