@@ -85,7 +85,7 @@ export default function ProviderPage() {
   return(
     <>
         <Navbar />
-        <div className="container mx-auto max-w-3xl p-4">
+        <div className="container mx-auto max-w-3xl p-4 my-14">
       <Card>
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Showcase Your Expertise</CardTitle>
