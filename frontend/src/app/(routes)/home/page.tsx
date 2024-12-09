@@ -6,13 +6,16 @@ import {CarIcon} from "@/components/statics/Icons";
 import React from "react";
 import ServiceCard from "@/components/large/ServiceCard";
 import ProviderCard from "@/components/large/ProviderCard";
+import NavbarLayout from "@/components/navbar-layout";
+import ServiceCart from "@/app/(routes)/cart/page";
 
 
 export default function LandingPage() {
 
     return (
         <>
-            <Navbar></Navbar>
+            <NavbarLayout>
+                
             <div className='w-full h-auto bg-white flex flex-col pb-5'>
                 <section className='w-full  min-h-80  border-2 flex-col flex items-center justify-center'>
                     <p className='text-5xl font-bold text-center'>Find Your<br/> Trusted Tasker</p>
@@ -185,6 +188,7 @@ export default function LandingPage() {
 
             </div>
             <Footer></Footer>
+            </NavbarLayout>
         </>
     )
 

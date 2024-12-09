@@ -77,7 +77,7 @@ export default function SearchPage() {
     }, []);
 
 
-    const groupedServices = services.reduce((acc, service) => {
+    const groupedServices = services.reduce(({acc, service}: any) => {
         if (!acc[service.serviceType]) {
             acc[service.serviceType] = [];
         }

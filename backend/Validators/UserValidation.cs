@@ -58,8 +58,7 @@ public class  ServiceUniqueAttribute : ValidationAttribute {
         object? value, ValidationContext validationContext)
     {
         var context = (SeekrDbContext)validationContext.GetService(typeof(SeekrDbContext))!;
-        var entity = context?.Services.SingleOrDefault(e => value != null && e.ServiceType== value.ToString());
-
+        var entity = context?.Services.SingleOrDefault(e => value != null && e.Title == value.ToString());
         return entity != null ? new ValidationResult(GetErrorMessage(value?.ToString())) : ValidationResult.Success;
     }
     private string GetErrorMessage(string? service)
@@ -67,4 +66,6 @@ public class  ServiceUniqueAttribute : ValidationAttribute {
         return $"Service {service} is already in use.";
     }
 }
+
+
 
