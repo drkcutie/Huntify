@@ -59,25 +59,23 @@ export default function ProviderPage() {
     
     React.useEffect(() => {
         const fetchData = async () => {
-            try {
-                const servicesResponse = await Promise.all([
-                  fetch('http://localhost:5000/api/Service', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                  }),
-                ]);
-
-                if (!servicesResponse.ok ) {
-                    throw new Error('Failed to fetch services');
-                }
-
-                const servicesData = await servicesResponse.json();
-                setService(servicesData);
-                setLoading(false);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'An error occurred');
-                setLoading(false);
+          try {
+            const response = await fetch('http://localhost:5000/api/Service', {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            });
+    
+            if (!response.ok) {
+              throw new Error('Failed to fetch services');
             }
+    
+            const servicesData = await response.json();
+            setService(servicesData);
+            setLoading(false);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred');
+            setLoading(false);
+          }
         };
 
         fetchData();
@@ -109,22 +107,24 @@ export default function ProviderPage() {
           name="items"
           render={() => (
             <FormItem>
-              <div className="mb-4">
-                <FormLabel className="text-base">Sidebar</FormLabel>
+              <div className="mb-4 flex flex-col justify-center items-center ">
+                <FormLabel className="text-base">What Services do you Offer?</FormLabel>
                 <FormDescription>
                   Select the items you want to display in the sidebar.
                 </FormDescription>
               </div>
+              <div className="flex flex-row"> 
               {services.map((service) => (
-                <FormField
+                <FormField 
                   key={service.title}
                   control={form.control}
                   name="items"
+                  
                   render={({ field }) => {
                     return (
                       <FormItem
                         key={service.title}
-                        className="flex flex-row items-start space-x-3 space-y-0"
+                        className="flex flex-row items-start space-x-3 space-y-0 mx-10"
                       >
                         <FormControl>
                           <Checkbox
@@ -148,7 +148,8 @@ export default function ProviderPage() {
                   }}
                 />
               ))}
-              <FormMessage />
+              </div>
+              <FormMessage  />
             </FormItem>
           )}
         />
