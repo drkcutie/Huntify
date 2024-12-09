@@ -52,7 +52,6 @@ export default function ProviderPage() {
     const [rateType, setRateType] = React.useState('hourly')
     const [description, setDescription] = React.useState('')
     const [experience, setExperience] = React.useState('')
-    const [portfolio, setPortfolio] = React.useState('')
     
     React.useEffect(() => {
         const fetchData = async () => {
@@ -162,17 +161,6 @@ export default function ProviderPage() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="portfolio" className="text-lg font-semibold">Portfolio link:</Label>
-              <Input 
-                id="portfolio" 
-                type="url"
-                placeholder="https://your-portfolio.com" 
-                value={portfolio}
-                onChange={(e) => setPortfolio(e.target.value)}
-              />
-            </div>
-
             <div className="pt-4">
               <Button type="submit" className="w-full text-lg py-6">
                 Publish Your Service
@@ -203,11 +191,7 @@ export default function ProviderPage() {
             <Clock className="h-5 w-5 text-blue-600" />
             <span>{experience || '0'} years of experience</span>
           </div>
-          {portfolio && (
-            <a href={portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-              View Portfolio
-            </a>
-          )}
+          
         </CardContent>
       </Card>
     </div>
