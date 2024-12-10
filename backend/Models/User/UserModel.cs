@@ -38,10 +38,8 @@ namespace backend.Models.User
         public DateOnly UpdatedOn { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         [MaxLength(255)] public string? Biography { get; set; }
-
         public String ProfilePicture { get; set; } = "";
-
-
+        public String CoverPhoto{ get; set; } = "";
         //Relationships
         public Client? Client { get; set; }
         public ServiceProviderModel? ServiceProvider { get; set; }
@@ -62,7 +60,6 @@ namespace backend.Models.User
         Client, 
         ServiceProvider
     }
-
     public class RegisterDTO
     {
         [Required] public string FirstName { get; set; } = null!;

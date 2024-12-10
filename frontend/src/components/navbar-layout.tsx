@@ -38,7 +38,7 @@ import {redirect} from "next/navigation";
 const data = {
   navMain: [
     {
-      title: "Getting Started",
+      title: "Home",
       url: "#",
       items: [
         {
@@ -52,50 +52,9 @@ const data = {
       ],
     },
     {
-      title: "Building Your Application",
+      title: "Browse Services",
       url: "#",
       items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
         {
           title: "Upgrading",
           url: "#",
@@ -107,7 +66,7 @@ const data = {
       ],
     },
     {
-      title: "API Reference",
+      title: "How it works",
       url: "#",
       items: [
         {
@@ -137,7 +96,7 @@ const data = {
       ],
     },
     {
-      title: "Architecture",
+      title: "Category",
       url: "#",
       items: [
         {

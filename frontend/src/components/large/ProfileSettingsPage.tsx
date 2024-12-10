@@ -36,21 +36,18 @@ import {
 import {
     Input
 } from "@/components/ui/input"
-import LocationSelector from "@/components/ui/location-input"
 
 const formSchema = z.object({
     biographyInput: z.string(),
     phoneNumberInput: z.string(),
     name_4142876016: z.string(),
-    countryProvinceInput: z.tuple([z.string(), z.string().optional()]),
     addressInput: z.string().max(255),
     additionalDetailsInput: z.string(),
-    name_7534179501: z.string(),
     identificationCardUpload: z.string()
 });
 
 export default function ProfileSettingsPage() {
-
+    const [editable, setEditable] = useState < boolean > (false)
     const [countryName, setCountryName] = useState < string > ('')
     const [stateName, setStateName] = useState < string > ('')
 
@@ -87,6 +84,9 @@ export default function ProfileSettingsPage() {
                                 <Textarea
                                     placeholder="Write about yourself or your project here. Keep it short and meaningful!"
                                     className="resize-none"
+                                    disable = {editable ? "true" : "false"}
+                                    userSelect = {editable ? "auto" : "none"}
+                                    readOnly = {!editable}
                                     {...field}
                                 />
                             </FormControl>
@@ -135,29 +135,6 @@ export default function ProfileSettingsPage() {
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="countryProvinceInput"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Select Country</FormLabel>
-                            <FormControl>
-                                <LocationSelector
-                                    onCountryChange={(country) => {
-                                        setCountryName(country?.name || '')
-                                        form.setValue(field.name, [country?.name || '', stateName || ''])
-                                    }}
-                                    onStateChange={(state ) => {
-                                        setStateName(state?.name || '')
-                                        form.setValue(field.name, [countryName || '', state?.name || ''])
-                                    }}
-                                />
-                            </FormControl>
-                            <FormDescription>If your country has states, it will be appear after selecting country</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
 
                 <FormField
                     control={form.control}
@@ -197,24 +174,7 @@ export default function ProfileSettingsPage() {
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="name_7534179501"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Date of Birth</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Enter your date of birth (e.g., MM/DD/YYYY)."
-
-                                    type=""
-                                    {...field} />
-                            </FormControl>
-
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+         
 
                 <FormField
                     control={form.control}
@@ -234,7 +194,10 @@ export default function ProfileSettingsPage() {
                         </FormItem>
                     )}
                 />
+                <div className='flex flex-row gap-2'>
+                <Button>Edit</Button>
                 <Button type="submit">Submit</Button>
+                </div>
             </form>
         </Form>
     )

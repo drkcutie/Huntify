@@ -49,11 +49,36 @@ namespace backend.Controllers
             return userModel;
         }
 
-        private string GenerateJwtToken(string username)
+        private async Task<ActionResult<string>> GenerateJwtToken(string username, int userId)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound("User does not exist");
+            }
+            var role = "";
+            var roleId = 0;
+            if (user.Client != null)
+            {
+                role = "Client";
+                roleId = user.Client.ClientId;
+            }
+            else if (user.ServiceProvider != null)
+            {
+                role = "ServiceProvider";
+                roleId = user.ServiceProvider.ServiceProviderId;
+            }
+            else
+            {
+                return NotFound("User has no associated role");
+            }
+            
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim("id", userId.ToString()),
+                new Claim("role",role),
+                new Claim("roleId",roleId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -131,8 +156,85 @@ namespace backend.Controllers
                 return Unauthorized("Invalid username and password");
             }
 
-            token = GenerateJwtToken(user.Username!);
-            return Ok(new {token});
+            var tokenResult = await GenerateJwtToken(user.Username!, user.Id);
+            
+            return Ok(new {tokenResult});
+        }
+
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<ActionResult<UserModel>> GetProfile()
+        {
+            var identity = HttpContext.User.Identities as ClaimsIdentity;
+            if (identity == null)
+            {
+                return Unauthorized();
+            }
+        
+            var userId = identity.FindFirst("id")?.Value; // Retrieve user id from token
+            var username = identity.FindFirst(ClaimTypes.Name)?.Value; // Retrieve username from token
+
+            return Ok(new { UserId = userId, Username = username });
+        }
+        [Authorize]
+        [HttpGet("getClient")]
+        public async Task<ActionResult<UserModel>> GetClientUsingUserID()
+        {
+            var identity = HttpContext.User.Identities as ClaimsIdentity;
+            if (identity == null)
+            {
+                return Unauthorized();
+            }
+        
+            var userIdFromToken= identity.FindFirst("id")?.Value; // Retrieve user id from token
+            var username = identity.FindFirst(ClaimTypes.Name)?.Value; // Retrieve username from token
+            
+            if (!int.TryParse(userIdFromToken, out int userId))
+            {
+                return BadRequest("Invalid user id");
+            }            
+            
+            var client = await _context.Clients
+                .Where(u => u.UserId == userId)  // Assuming UserId is an integer in your table
+                .FirstOrDefaultAsync();
+
+            if (client == null)
+            {
+                return NotFound("Client does not exist");
+            }
+            
+            return Ok(new {clientId = client.ClientId, Username = username });
+            
+        }
+        [Authorize]
+        [HttpGet("getServiceProvider")]
+        public async Task<ActionResult<UserModel>> GetServiceProviderUsingUserId()
+        {
+            var identity = HttpContext.User.Identities as ClaimsIdentity;
+            if (identity == null)
+            {
+                return Unauthorized();
+            }
+        
+            var userIdFromToken= identity.FindFirst("id")?.Value; // Retrieve user id from token
+            var username = identity.FindFirst(ClaimTypes.Name)?.Value; // Retrieve username from token
+            
+            if (!int.TryParse(userIdFromToken, out int userId))
+            {
+                return BadRequest("Invalid user id");
+            }            
+            
+            var serviceProvider = await _context.ServiceProviders
+                .Where(u => u.UserId == userId)  // Assuming UserId is an integer in your table
+                .FirstOrDefaultAsync();
+
+            if (serviceProvider == null)
+            {
+                return NotFound("Client does not exist");
+            }
+            
+            return Ok(new {clientId = serviceProvider.ServiceProviderId, Username = username });
+            
         }
 
         [HttpPost("register")]
