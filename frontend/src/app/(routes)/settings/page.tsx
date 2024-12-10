@@ -3,7 +3,8 @@ import Navbar from "@/components/large/NavBar";
 import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import ProfileSettingsPage from "@/components/large/ProfileSettingsPage";
 
 export default function SettingsPage() {
   // State to keep track of the currently selected settings option
@@ -36,103 +37,8 @@ export default function SettingsPage() {
       }
     
   }
-
-  // Placeholder components for each setting's content (replace with actual components or content)
-  const ProfileSettings = () => 
-        <div className="space-y-8">
-            <h2 className="text-2xl font-bold">Profile</h2>
-
-            <div className="flex items-center space-x-4">
-            <img 
-                src="https://via.placeholder.com/100" 
-                alt="Profile Image"
-                className="w-20 h-20 rounded-full object-cover"
-            />
-            <div>
-                <h2 className="text-2xl font-bold">John Doe</h2> 
-            </div>
-            </div>
-
-            <div>
-            <h3 className="text-lg font-medium">Status & Recently</h3>
-            <div className="text-gray-600"> 
-                <p>Status: Active</p>
-                <p>Recently: Logged in 3 hours ago</p>
-            </div>
-            </div>
-
-            {/* About Section */}
-            <div>
-            <h2 className="text-xl font-bold">About</h2>
-            <div className="h-2"></div> 
-            <p className="text-gray-600"> 
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.
-            </p>
-            </div>
-
-            {/* Phone Details */}
-            <div>
-            <h3 className="text-lg font-medium">Phone</h3>
-            <p className="text-gray-600"> 
-                +1 123 456 7890
-            </p>
-            </div>
-
-            {/* Email Address */}
-            <div>
-            <h3 className="text-lg font-medium">Email</h3>
-            <p className="text-gray-600"> 
-                <a href="mailto:johndoe@example.com">johndoe@example.com</a>
-            </p>
-            </div>
-
-            {/* Address Section */}
-            <div>
-            <h2 className="text-xl font-bold">Address</h2>
-            <div className="h-2"></div> 
-            <p className="text-gray-600"> 
-                123 Main St, Anytown, USA 12345
-            </p>
-            </div>
-
-            {/* Additional Details */}
-            <div>
-            <h3 className="text-lg font-medium">Additional Details</h3>
-            <p className="text-gray-600"> 
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna sed, convallis ex.
-            </p>
-            </div>
-
-            {/* Seeker Details Section */}
-            <div>
-            <h2 className="text-xl font-bold">Seeker Details</h2>
-            <div className="h-2"></div> 
-
-            {/* Date of Birth Details */}
-            <div>
-                <h3 className="text-lg font-medium">Date of Birth</h3>
-                <p className="text-gray-600"> 
-                January 1, 1990
-                </p>
-            </div>
-
-            {/* National ID Details */}
-            <div>
-                <h3 className="text-lg font-medium">National ID</h3>
-                <p className="text-gray-600"> 
-                XXX-XX-1234
-                </p>
-            </div>
-
-            {/* Job Details */}
-            <div>
-                <h3 className="text-lg font-medium">Job</h3>
-                <p className="text-gray-600"> 
-                Software Engineer at ABC Corporation
-                </p>
-            </div>
-            </div>
-        </div>    
+  const ProfileSettings = () => <ProfileSettingsPage/>
+       
 
 
 
