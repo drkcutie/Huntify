@@ -1,33 +1,38 @@
-'use server'
+"use server"
 import Cookies from 'js-cookie';
 import { cookies } from 'next/headers';
-import {redirect} from "next/navigation";
-import {FaL} from "react-icons/fa6";
+import { redirect } from "next/navigation";
+
+
 
 interface LoginRequest {
     username: string;
     password: string;
 }
-interface ProviderService{
+interface ProviderService {
     providerServiceId: number;
     serviceProviderId: number;
     serviceProvider: string;
     serviceId: number;
     service: string;
+    rate: number;
+    rateType: string;
+    description: string;
+    yearsOfExperience: string;
 }
 
 interface RegisterRequest {
-    firstName : string;
-    lastName : string;
-    email : string;
-    dateOfBirth : string |null;
+    firstName: string;
+    lastName: string;
+    email: string;
+    dateOfBirth: string | null;
     username: string;
     password: string;
-    accountType : number;
+    accountType: number;
 }
 
 export async function createCookies(data: any) {
-    const cookieStore = await cookies()
+    const cookieStore = await cookies();
     cookieStore.set({
         name: 'currentUser',
         value: data.token,
@@ -35,12 +40,14 @@ export async function createCookies(data: any) {
         sameSite: 'lax',
         secure: true,
         path: '/',
-    })
+    });
     redirect('/home');
 }
+
 export async function deleteCookie() {
     (await cookies()).delete('currentUser');
 }
+
 export async function loginUser(data: LoginRequest) {
     try {
         const response = await fetch('http://localhost:5000/api/UserModel/login', {
@@ -58,7 +65,7 @@ export async function loginUser(data: LoginRequest) {
         const result = await response.json();
         await createCookies(result);
     } catch (error) {
-        // console.error('Error logging in:', error);
+        console.error('Error logging in:', error);
         throw error; // Re-throw to handle it in the calling function
     }
 }
@@ -85,6 +92,7 @@ export async function GET(request: Request) {
         return new Response(JSON.stringify({ message: 'Error occurred' }), { status: 500 });
     }
 }
+
 export async function registerUser(data: RegisterRequest) {
     try {
         const response = await fetch('http://localhost:5000/api/UserModel/register', {
@@ -103,31 +111,52 @@ export async function registerUser(data: RegisterRequest) {
         const result = await response.json();
         console.log(result);
         redirect('/auth/login');
-         return result
-
+        return result;
     } catch (error: any) {
         console.error('Error during registration:', error.message || error);
         throw error; // Re-throw to handle it in the calling function
     }
 }
+
 export async function PostService(data: ProviderService) {
+    let rateType = 0;
+    if(data.rateType == "fixed"){
+        rateType = 1;
+    }
+    let experience = 0;
+    if(data.yearsOfExperience == "OneToThreeYears"){
+        experience = 1;
+    }else if(data.yearsOfExperience == "ThreeToFiveYears"){
+        experience = 2;
+    }else if(data.yearsOfExperience == "MoreThanFiveYears"){
+        experience = 3;
+    }
     try {
         const response = await fetch('http://localhost:5000/api/ProviderService', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data), // Send data as JSON
+            body: JSON.stringify({
+                providerServiceId: data.providerServiceId,
+                serviceProviderId: data.serviceProviderId,
+                serviceProvider: data.serviceProvider,
+                serviceId: data.serviceId,
+                service: data.service,
+                rate: data.rate,
+                rateType: rateType,
+                description: data.description,
+                yearsOfExperience: experience,
+            }),
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to login');
+            throw new Error(errorData.message || 'Failed to post service');
         }
-        handleCookie(response);
-        return await response.json(); 
+        return await response.json();
     } catch (error) {
-        console.error('Error logging in:', error);
-        throw error; // Re-throw to handle it in the calling function
+        console.error('Error posting service:', error);
     }
 }
+
