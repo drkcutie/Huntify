@@ -13,7 +13,6 @@ public class Service
     [Key]
     public int ServiceId { get; set; }
     
-    
     public string ServiceType { get; set; } = "General";
 
     [ServiceUnique]
@@ -22,6 +21,7 @@ public class Service
     
     [MaxLength(255)]
     public string Description { get; set; } = "";
+    
     [MaxLength(255)]
     public string Image { get; set; } = "";
 
