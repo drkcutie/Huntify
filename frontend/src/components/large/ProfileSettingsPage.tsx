@@ -95,7 +95,6 @@ export default function ProfileSettingsPage() {
                   <FileInput
                     id="fileInput"
                     className="outline-dashed outline-1 outline-slate-500"
-                    isLOF = {true}
                   >
                     <div className="flex w-full flex-col items-center justify-center p-8">
                       <CloudUpload className="h-10 w-10 text-gray-500" />
