@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useRef } from "react"
-import Link from "next/link"
-import { GalleryVerticalEnd, Menu, ShoppingCart, User } from 'lucide-react'
+import * as React from "react";
+import { useRef } from "react";
+import Link from "next/link";
+import { GalleryVerticalEnd, Menu, ShoppingCart, User } from "lucide-react";
 
-import { ServiceCart } from "@/components/service-cart"
-import { Button } from "@/components/ui/button"
+import { ServiceCart } from "@/components/service-cart";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -29,10 +29,11 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import {deleteCookie} from "@/app/api/route";
-import {redirect} from "next/navigation";
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { deleteCookie } from "@/app/api/route";
+import { redirect } from "next/navigation";
+import { FaUsersViewfinder } from "react-icons/fa6";
 
 // This is sample data.
 const data = {
@@ -73,71 +74,33 @@ const data = {
           title: "Components",
           url: "#",
         },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
       ],
     },
     {
       title: "Category",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
+      url: "/search",
+      items: [],
     },
   ],
-}
+};
 
-export default function NavbarLayout({ children }: { children: React.ReactNode }) {
-  return ( 
-    <div className="w-full flex min-h-screen flex-col ">
+export default function NavbarLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="w-full pr-5 pl-5 flex h-14 items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link href="/home" className="flex items-center space-x-2">
-              
-              <GalleryVerticalEnd className="h-6 w-6" />
-              <span className="font-bold">Seekr</span>
+        <div className="flex h-14 w-full items-center justify-between pl-5 pr-5">
+          <div className="flex items-center space-x-4 pl-10">
+            <Link href="/home" className="flex items-center gap-2 space-x-2">
+              <FaUsersViewfinder className="h-7 w-7" />
+              <span className="text-xl font-bold">Seekr</span>
             </Link>
             <MainNav />
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 pr-10">
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline">
@@ -159,12 +122,12 @@ export default function NavbarLayout({ children }: { children: React.ReactNode }
       </header>
       <main className="flex-1">{children}</main>
     </div>
-  )
+  );
 }
 
 function MainNav() {
   return (
-    <NavigationMenu className="hidden md:flex ">
+    <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
         {data.navMain.map((item) => (
           <NavigationMenuItem key={item.title}>
@@ -191,20 +154,20 @@ function MainNav() {
         ))}
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
 
 function UserMenu() {
-  function handleLogout (){
-    deleteCookie().then(r => redirect('/auth/login'));
+  function handleLogout() {
+    deleteCookie().then((r) => redirect("/auth/login"));
   }
-  
+
   function handleProfile(){
-    
+    redirect('profile');
   }
-  
-  function handleSetting(){
-      redirect('/settings');
+
+  function handleSetting() {
+    redirect("/settings");
   }
 
   return (
@@ -224,19 +187,13 @@ function UserMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleProfile}>
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleSetting} >
-          Settings
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleProfile}>Profile</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSetting}>Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick = {handleLogout}>
-          Log out
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 function MobileNav() {
@@ -252,7 +209,11 @@ function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="pr-0">
-        <MobileLink href="/" className="flex items-center" onOpenChange={() => {}}>
+        <MobileLink
+          href="/"
+          className="flex items-center"
+          onOpenChange={() => {}}
+        >
           <GalleryVerticalEnd className="mr-2 h-4 w-4" />
           <span className="font-bold">Seekr</span>
         </MobileLink>
@@ -285,13 +246,13 @@ function MobileNav() {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
 
 interface MobileLinkProps extends React.ComponentPropsWithoutRef<"a"> {
-  onOpenChange?: (open: boolean) => void
-  children: React.ReactNode
-  href: string
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
+  href: string;
 }
 
 function MobileLink({
@@ -303,24 +264,23 @@ function MobileLink({
 }: MobileLinkProps) {
   const router = {
     push: (path: string) => {
-      console.log(`Navigating to: ${path}`)
+      console.log(`Navigating to: ${path}`);
     },
-  }
-  const linkRef = useRef<HTMLAnchorElement>(null)
+  };
+  const linkRef = useRef<HTMLAnchorElement>(null);
 
   return (
     <Link
       ref={linkRef}
       href={href}
       onClick={() => {
-        router.push(href)
-        onOpenChange?.(false)
+        router.push(href);
+        onOpenChange?.(false);
       }}
       className={className}
       {...props}
     >
       {children}
     </Link>
-  )
+  );
 }
-

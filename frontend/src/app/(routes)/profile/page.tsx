@@ -1,8 +1,11 @@
+'use client'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import NavbarLayout from "@/components/navbar-layout";
 import Footer from "@/components/large/Footer";
+import {useState} from "react";
+import Link from "next/link";
 
 interface UserProfile {
   name: string;
@@ -25,7 +28,6 @@ const dummyUser: UserProfile = {
   coverPhoto: "/placeholder.svg?height=300&width=1000",
   profilePicture: "/placeholder.svg?height=150&width=150",
 };
-
 export default function ProfilePage({
   user = dummyUser,
 }: {
@@ -39,7 +41,7 @@ export default function ProfilePage({
             <img
               src={user.coverPhoto}
               alt=""
-              className="h-72 w-full rounded-t-lg object-cover border-2 shadow "
+              className="h-72 w-full rounded-t-lg border-2 object-cover shadow"
             />
             <Avatar className="border-1 absolute bottom-0 left-20 h-32 w-32 translate-y-1/2 transform border-white shadow-lg">
               <AvatarImage src={user.profilePicture} alt={user.name} />
@@ -53,7 +55,7 @@ export default function ProfilePage({
                   <h1 className="text-2xl font-bold">{user.name}</h1>
                   <p className="text-gray-500">{user.username}</p>
                 </div>
-                <Button>Edit Profile</Button>
+                <Link href = "/settings"><Button>Edit Profile</Button></Link>
               </div>
               <p className="mb-4">{user.bio}</p>
               <div className="mb-4 flex flex-wrap gap-4 text-sm text-gray-500">

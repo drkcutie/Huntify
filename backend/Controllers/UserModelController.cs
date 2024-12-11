@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol.Plugins;
 
 namespace backend.Controllers
 {
@@ -51,38 +45,47 @@ namespace backend.Controllers
 
         private async Task<ActionResult<string>> GenerateJwtToken(string username, int userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
-            {
-                return NotFound("User does not exist");
-            }
             var role = "";
             var roleId = 0;
+            
+            var user = await _context.Users.Include(userModel => userModel.Client)
+                .Include(userModel => userModel.ServiceProvider).FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+             Console.WriteLine("User Not found");
+                return NotFound("User does not exist");
+            }
+
+            Console.WriteLine("This is the user" + user.Client);
             if (user.Client != null)
             {
+                Console.WriteLine("User is a client");
                 role = "Client";
                 roleId = user.Client.ClientId;
             }
             else if (user.ServiceProvider != null)
             {
+                Console.WriteLine("User is a service provider");
                 role = "ServiceProvider";
                 roleId = user.ServiceProvider.ServiceProviderId;
             }
             else
             {
+                Console.WriteLine("User has no associated role");
                 return NotFound("User has no associated role");
             }
-            
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim("id", userId.ToString()),
-                new Claim("role",role),
-                new Claim("roleId",roleId.ToString()),
+                new Claim("role", role),
+                new Claim("roleId", roleId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_very_long_secret_key_of_at_least_32_bytes!"));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("your_very_long_secret_key_of_at_least_32_bytes!"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
@@ -156,56 +159,61 @@ namespace backend.Controllers
                 return Unauthorized("Invalid username and password");
             }
 
-            var tokenResult = await GenerateJwtToken(user.Username!, user.Id);
-            
-            return Ok(new {tokenResult});
+            var getToken= await GenerateJwtToken(user.Username!, user.Id);
+            return Ok(new { tokenResult = new
+            {
+                result = "success",
+                token = getToken.Value
+                
+            } });
         }
 
         [Authorize]
         [HttpGet("profile")]
-        public async Task<ActionResult<UserModel>> GetProfile()
+        public Task<ActionResult<UserModel>> GetProfile()
         {
             var identity = HttpContext.User.Identities as ClaimsIdentity;
             if (identity == null)
             {
-                return Unauthorized();
+                return Task.FromResult<ActionResult<UserModel>>(Unauthorized());
             }
-        
+
             var userId = identity.FindFirst("id")?.Value; // Retrieve user id from token
             var username = identity.FindFirst(ClaimTypes.Name)?.Value; // Retrieve username from token
 
-            return Ok(new { UserId = userId, Username = username });
+            return Task.FromResult<ActionResult<UserModel>>(Ok(new { UserId = userId, Username = username }));
         }
+
         [Authorize]
         [HttpGet("getClient")]
-        public async Task<ActionResult<UserModel>> GetClientUsingUserID()
+        public async Task<ActionResult<UserModel>> GetClientUsingUserId()
         {
             var identity = HttpContext.User.Identities as ClaimsIdentity;
             if (identity == null)
             {
                 return Unauthorized();
             }
-        
-            var userIdFromToken= identity.FindFirst("id")?.Value; // Retrieve user id from token
+
+            var userIdFromToken = identity.FindFirst("id")?.Value; // Retrieve user id from token
             var username = identity.FindFirst(ClaimTypes.Name)?.Value; // Retrieve username from token
-            
+
             if (!int.TryParse(userIdFromToken, out int userId))
             {
                 return BadRequest("Invalid user id");
-            }            
-            
+            }
+
             var client = await _context.Clients
-                .Where(u => u.UserId == userId)  // Assuming UserId is an integer in your table
+                .Where(u => u.UserId == userId) // Assuming UserId is an integer in your table
                 .FirstOrDefaultAsync();
 
             if (client == null)
             {
                 return NotFound("Client does not exist");
             }
-            
-            return Ok(new {clientId = client.ClientId, Username = username });
-            
+
+            return Ok(new { clientId = client.ClientId, Username = username });
         }
+
         [Authorize]
         [HttpGet("getServiceProvider")]
         public async Task<ActionResult<UserModel>> GetServiceProviderUsingUserId()
@@ -215,26 +223,25 @@ namespace backend.Controllers
             {
                 return Unauthorized();
             }
-        
-            var userIdFromToken= identity.FindFirst("id")?.Value; // Retrieve user id from token
+
+            var userIdFromToken = identity.FindFirst("id")?.Value; // Retrieve user id from token
             var username = identity.FindFirst(ClaimTypes.Name)?.Value; // Retrieve username from token
-            
+
             if (!int.TryParse(userIdFromToken, out int userId))
             {
                 return BadRequest("Invalid user id");
-            }            
-            
+            }
+
             var serviceProvider = await _context.ServiceProviders
-                .Where(u => u.UserId == userId)  // Assuming UserId is an integer in your table
+                .Where(u => u.UserId == userId) // Assuming UserId is an integer in your table
                 .FirstOrDefaultAsync();
 
             if (serviceProvider == null)
             {
                 return NotFound("Client does not exist");
             }
-            
-            return Ok(new {clientId = serviceProvider.ServiceProviderId, Username = username });
-            
+
+            return Ok(new { clientId = serviceProvider.ServiceProviderId, Username = username });
         }
 
         [HttpPost("register")]
@@ -244,8 +251,9 @@ namespace backend.Controllers
                 == registerDto.Username || u.Email == registerDto.Email);
             if (existingUser is not null)
             {
-                return BadRequest(new {Message = "User already exists"});
+                return BadRequest(new { Message = "User already exists" });
             }
+
             var userModel = new UserModel
             {
                 FirstName = registerDto.FirstName,
@@ -254,45 +262,45 @@ namespace backend.Controllers
                 Email = registerDto.Email,
                 Username = registerDto.Username,
                 Password = registerDto.Password
-                
-                
-
             };
             //Hash Password
             var passwordHasher = new PasswordHasher<UserModel>();
-            userModel.Password = passwordHasher.HashPassword(userModel , registerDto.Password!);
-            registerClientOrServiceProvider(registerDto, userModel);
-            
+            userModel.Password = passwordHasher.HashPassword(userModel, registerDto.Password!);
+            RegisterClientOrServiceProvider(registerDto, userModel);
+
             _context.Users.Add(userModel);
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception e )
+            catch (Exception e)
             {
                 return StatusCode(500, "An error occurred while registering user");
             }
-            
-            return Ok(new {Message = "User registered successfully "} );
+
+            return Ok(new { Message = "User registered successfully " });
         }
 
-        private static void registerClientOrServiceProvider(RegisterDTO registerDto, UserModel userModel)
+        private static void RegisterClientOrServiceProvider(RegisterDTO registerDto, UserModel userModel)
         {
             if (registerDto.AccountType == AccountType.Client)
             {
-                userModel.Client  = new Client
+                userModel.Client = new Client
+                {
+                    User = userModel
+                };
+            }
+            else if (registerDto.AccountType == AccountType.ServiceProvider)
+            {
+                userModel.ServiceProvider = new ServiceProviderModel
                 {
                     User = userModel
                 };
             }
             else
             {
-                userModel.ServiceProvider = new ServiceProviderModel 
-                {
-                    User = userModel
-                };
+                throw new ArgumentException("Invalid account type provided");
             }
-            
         }
 
         // DELETE: api/UserModel/5
