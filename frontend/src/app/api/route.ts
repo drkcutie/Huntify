@@ -10,7 +10,6 @@ interface LoginRequest {
     password: string;
 }
 interface ProviderService {
-    providerServiceId: number;
     serviceProviderId: number;
     serviceProvider: string;
     serviceId: number;
@@ -120,7 +119,7 @@ export async function registerUser(data: RegisterRequest) {
 
 export async function PostService(data: ProviderService) {
     let rateType = 0;
-    if(data.rateType == "fixed"){
+    if(data.rateType == "PerOrder"){
         rateType = 1;
     }
     let experience = 0;
