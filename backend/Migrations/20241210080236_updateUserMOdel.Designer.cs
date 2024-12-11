@@ -12,8 +12,8 @@ using backend.Models.User;
 namespace backend.Migrations
 {
     [DbContext(typeof(SeekrDbContext))]
-    [Migration("20241210075601_updateUser")]
-    partial class updateUser
+    [Migration("20241210080236_updateUserMOdel")]
+    partial class updateUserMOdel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

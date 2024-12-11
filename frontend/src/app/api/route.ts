@@ -10,7 +10,6 @@ interface LoginRequest {
 }
 
 interface ProviderService {
-    providerServiceId: number;
     serviceProviderId: number;
     serviceProvider: string;
     serviceId: number;
@@ -153,44 +152,44 @@ export async function decode() {
 
 export async function PostService(data: ProviderService) {
     let rateType = 0;
-    if (data.rateType === "fixed") {
-        rateType = 1;
-    }
-
-    let experience = 0;
-    if (data.yearsOfExperience === "OneToThreeYears") {
-        experience = 1;
-    } else if (data.yearsOfExperience === "ThreeToFiveYears") {
-        experience = 2;
-    } else if (data.yearsOfExperience === "MoreThanFiveYears") {
-        experience = 3;
-    }
-
-    try {
-        const response = await fetch('http://localhost:5000/api/ProviderService', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                providerServiceId: data.providerServiceId,
-                serviceProviderId: data.serviceProviderId,
-                serviceProvider: data.serviceProvider,
-                serviceId: data.serviceId,
-                service: data.service,
-                rate: data.rate,
-                rateType: rateType,
-                description: data.description,
-                yearsOfExperience: experience,
-            }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to post service');
+        if (data.rateType == "PerOrder") {
+            rateType = 1;
         }
-        return await response.json();
-    } catch (error) {
-        console.error('Error posting service:', error);
-    }
+
+        let experience = 0;
+        if (data.yearsOfExperience === "OneToThreeYears") {
+            experience = 1;
+        } else if (data.yearsOfExperience === "ThreeToFiveYears") {
+            experience = 2;
+        } else if (data.yearsOfExperience === "MoreThanFiveYears") {
+            experience = 3;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/ProviderService', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    serviceProviderId: data.serviceProviderId,
+                    serviceProvider: data.serviceProvider,
+                    serviceId: data.serviceId,
+                    service: data.service,
+                    rate: data.rate,
+                    rateType: rateType,
+                    description: data.description,
+                    yearsOfExperience: experience,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to post service');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error posting service:', error);
+        }
+    
 }

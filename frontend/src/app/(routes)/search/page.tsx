@@ -12,6 +12,7 @@ interface Service {
   serviceType: string;
   title: string;
   description: string;
+  image: string;
 }
 interface Skill {
   skillId: number;
@@ -150,8 +151,12 @@ export default function SearchPage() {
                       >
                         <div className="group hover:cursor-pointer w-full h-full">
                           {/* Image Section */}
-                          <div className="w-full h-48 bg-gray-200 mb-4 rounded-lg transition-transform duration-300 group-hover:scale-105"></div>
-
+                            <img
+                              src={service.image}
+                              alt={service.title}
+                              className="w-full h-64 object-fill mb-4 rounded-lg transition-transform duration-300 group-hover:scale-105"
+                            />
+                          
                           <div className="p-4 bg-background">
                             <h3 className="font-semibold text-lg">
                               {service.title.toUpperCase()}
