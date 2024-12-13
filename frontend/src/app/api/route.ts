@@ -11,9 +11,7 @@ interface LoginRequest {
 
 interface ProviderService {
     serviceProviderId: number;
-    serviceProvider: string;
     serviceId: number;
-    service: string;
     rate: number;
     rateType: string;
     description: string;
@@ -139,12 +137,13 @@ export async function decode() {
 
     if (!token) {
         console.log("No token found");
-        return;
+        return null;
     }
 
     try {
         const decoded = jwtDecode(token);
         console.log("Decoded token:", decoded);
+        return decoded;
     } catch (error) {
         console.error("Failed to decode token", error);
     }
@@ -173,9 +172,7 @@ export async function PostService(data: ProviderService) {
                 },
                 body: JSON.stringify({
                     serviceProviderId: data.serviceProviderId,
-                    serviceProvider: data.serviceProvider,
                     serviceId: data.serviceId,
-                    service: data.service,
                     rate: data.rate,
                     rateType: rateType,
                     description: data.description,
@@ -187,7 +184,8 @@ export async function PostService(data: ProviderService) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to post service');
             }
-            return await response.json();
+            let result = await response.json();
+            console.log(result);
         } catch (error) {
             console.error('Error posting service:', error);
         }

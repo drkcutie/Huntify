@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import Footer from "@/components/large/Footer";
-import {PostService} from "@/app/api/route";
+import {PostService, decode} from "@/app/api/route";
 
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
@@ -23,6 +23,11 @@ interface Service {
     description: string;
 }
 
+
+
+
+    
+
 const mapExperienceToLabel = (experience: string) => {
     switch (experience) {
       case 'LessThanOneYear':
@@ -37,36 +42,15 @@ const mapExperienceToLabel = (experience: string) => {
         return 'No experience selected';
     }
   };
+  
 
 
-const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-        const selectedServiceData = services.find(service => service.title === selectedService);
-        if (!selectedServiceData) {
-            throw new Error("Selected service not found");
-        }
 
-        const result = await PostService({
-            serviceProviderId: 1, // Replace with actual service provider ID
-            serviceProvider: "test", // Replace with actual service provider name
-            serviceId: selectedServiceData.serviceId,
-            service: selectedServiceData.title,
-            rate: parseFloat(rate),
-            rateType: rateType === 'hourly' ? "PerHour" : "PerOrder",
-            description: description,
-            yearsOfExperience: experience  
-        });
-
-        console.log("Service posted successfully: ", result);
-    } catch (error: any) {
-        console.error("Service posting failed: ", error.message || "An error occurred");
-    }
-};
 
 
 
 export default function ProviderPage() {
+   
 
     const [services, setService] = React.useState<Service[]>([]);
     const [loading, setLoading] = React.useState(true);
@@ -77,20 +61,55 @@ export default function ProviderPage() {
     const [description, setDescription] = React.useState('')
     const [experience, setExperience] = React.useState('')
 
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        try {
+            const decoded = await decode();
+            if (!decoded) {
+                throw new Error("Failed to decode token or token not found");
+            }
+            const selectedServiceData = services.find(service => service.title === selectedService);
+            if (!selectedServiceData) {
+                throw new Error("Selected service not found");
+            }
+    
+            const result = await PostService({
+                serviceProviderId: decoded.id, 
+                serviceId: selectedServiceData.serviceId,
+                rate: parseFloat(rate),
+                rateType: rateType === 'hourly' ? "PerHour" : "PerOrder",
+                description: description,
+                yearsOfExperience: experience  
+            });
+    
+            console.log("Service posted successfully: ", result);
+        } catch (error: any) {
+            console.error("Service posting failed: ", error.message || "An error occurred");
+        }
+    };
+
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/Service', {
-                    method: 'GET',
-                    headers: {'Content-Type': 'application/json'},
-                });
+                const [servicesResponse, providerResponse] = await Promise.all([
+                  fetch("http://localhost:5000/api/Service", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                  }),
+                  fetch("http://localhost:5000/api/ServiceProviderModel", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                  }),
+                ]);
+        
 
-                if (!response.ok) {
+                if (!servicesResponse.ok && !providerResponse.ok) {
                     throw new Error('Failed to fetch services');
                 }
 
-                const servicesData = await response.json();
+                const servicesData = await servicesResponse.json();
                 setService(servicesData);
+                
                 setLoading(false);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred');
@@ -246,3 +265,4 @@ export default function ProviderPage() {
     )
 
 }
+

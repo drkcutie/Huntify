@@ -21,7 +21,8 @@ public class ProviderService
 
  public double Rate { get; set; }
  
- public RateType RateType;
+ public RateType RateType {get; set;}
+
  [MaxLength(255)]
  public string Description { get; set; } = null!;
  
