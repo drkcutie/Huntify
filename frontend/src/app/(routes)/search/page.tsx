@@ -5,7 +5,7 @@ import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-
+import NavbarLayout from "@/components/navbar-layout";
 // Define the Skill interface based on your backend model
 interface Service {
   serviceId: number;
@@ -75,7 +75,8 @@ export default function SearchPage() {
 
     fetchData();
   }, []);
-  const groupedServices = services.reduce((acc, service) => {
+  //ANY . REMOVE IF NOT WORKING
+  const groupedServices = services.reduce((acc :any, service :any) => {
     if (!acc[service.serviceType]) {
       acc[service.serviceType] = [];
     }
@@ -85,10 +86,11 @@ export default function SearchPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-4">Lets Hunt for the Service</h1>
-        <h1 className="text-4xl font-bold mb-4">You Need!</h1>
+      <NavbarLayout>
+        
+      <div className="flex flex-col items-center justify-center mt-10">
+        <h1 className="text-4xl  font-normal   mb-4">Let's Hunt for the Service</h1>
+        <h1 className="text-4xl font mb-4">You Need!</h1>
         <div className="p-5 overflow-hidden w-[60px] h-[60px] hover:w-[270px] bg-green-900 shadow-[2px_2px_20px_rgba(0,0,0,0.08)] rounded-full flex group items-center hover:duration-300 duration-300">
           <div className="flex items-center justify-center fill-white">
             <svg
@@ -141,7 +143,7 @@ export default function SearchPage() {
                     {serviceType.toUpperCase()}
                   </h2>
                   <div className="flex flex-row flex-nowrap justify-start h-[500px] items-center gap-6 overflow-x-scroll no-scrollbar snap-x snap-mandatory">
-                    {groupedServices[serviceType].map((service) => (
+                    {groupedServices[serviceType].map((service :any) => (
                       <div
                         key={service.serviceId}
                         className="flex flex-col justify-center  items-center w-1/4 h-[400px] p-2 snap-center"
@@ -213,7 +215,7 @@ export default function SearchPage() {
           ))}
         </Tabs>
       </div>
-
+      </NavbarLayout>
       <Footer />
     </>
   );
