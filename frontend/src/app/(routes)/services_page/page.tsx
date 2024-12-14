@@ -5,6 +5,7 @@ import NavbarLayout from "@/components/navbar-layout";
 import { decode } from "@/app/api/route";
 import { Button } from "@/components/ui/button";
 import { getRateTypeAndExperience } from "@/lib/functions";
+import { redirect } from "next/navigation";
 
 interface Service {
   serviceId: number;
@@ -103,7 +104,7 @@ export default function ServicesPage() {
                   </h2>
                   <p>{providerService.description}</p>
                   {renderServiceDetails(providerService)}
-                  <Button>Post</Button>
+                  <Button onClick={redirect("/Post")}>Post</Button>
                 </div>
               ))}
             </div>

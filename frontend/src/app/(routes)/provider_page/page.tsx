@@ -25,6 +25,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Clock } from "lucide-react";
+import { redirect } from "next/navigation";
 
 interface Service {
   serviceId: number;
@@ -83,6 +84,7 @@ export default function ProviderPage() {
       });
 
       console.log("Service posted successfully: " + result);
+      redirect("/service_page");
     } catch (error: any) {
       console.error(
         "Service posting failed: ",

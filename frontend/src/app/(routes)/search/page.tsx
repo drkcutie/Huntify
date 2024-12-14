@@ -14,26 +14,43 @@ interface Service {
   description: string;
   image: string;
 }
-interface Skill {
-  skillId: number;
-  skillName: string;
+interface User {
+  Id: number;
+  Username: string;
+  firstName: string;
+  lastName: string;
+  ProfilePicture: string;
+  Biography: string;
 }
+interface ProviderService {
+  serviceId: number;
+  serviceType: string;
+  title: string;
+  description: string;
+  image: string;
+  serviceProviderId: number;
+}
+
 interface ServiceProvider {
   serviceProviderId: number;
+  UserId: number;
   name: string;
   email: string;
   phone: string;
   address: string;
   description: string;
-  skills: Skill[];
 }
 
 export default function SearchPage() {
   const [services, setService] = React.useState<Service[]>([]);
-  const [skills, setSkill] = React.useState<Skill[]>([]);
   const [serviceProvider, setServiceProvider] = React.useState<
     ServiceProvider[]
   >([]);
+  const [providerService, setProviderService] = React.useState<
+    ProviderService[]
+  >([]);
+  const [users, setUsers] = React.useState<User[]>([]);
+  // const [searchQuery, setSearchQuery] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [activeTab, setActiveTab] = React.useState("recommendations");
@@ -46,26 +63,57 @@ export default function SearchPage() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const [servicesResponse, skillsResponse] = await Promise.all([
+        const [
+          servicesResponse,
+          serviceProviderResponse,
+          providerServiceResponse,
+          userResponse,
+        ] = await Promise.all([
           fetch("http://localhost:5000/api/Service", {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           }),
-          fetch("http://localhost:5000/api/Skill", {
+          fetch("http://localhost:5000/api/ServiceProviderModel", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }),
+          fetch("http://localhost:5000/api/ProviderService", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }),
+          fetch("http://localhost:5000/api/UserModel", {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           }),
         ]);
 
-        if (!servicesResponse.ok) {
-          throw new Error("Failed to fetch services");
+        if (
+          !servicesResponse.ok &&
+          !serviceProviderResponse.ok &&
+          !providerServiceResponse.ok &&
+          !userResponse.ok
+        ) {
+          throw new Error(
+            "Failed to fetch services " +
+              servicesResponse.statusText +
+              " or " +
+              serviceProviderResponse.statusText +
+              " or " +
+              providerServiceResponse.statusText +
+              " or " +
+              userResponse.statusText,
+          );
         }
 
         const servicesData = await servicesResponse.json();
-        const skillsData = await skillsResponse.json();
+        const serviceProviderData = await serviceProviderResponse.json();
+        const providerServiceData = await providerServiceResponse.json();
+        const userData = await userResponse.json();
         console.log("Data Taken: " + servicesData);
         setService(servicesData);
-        setSkill(skillsData);
+        setServiceProvider(serviceProviderData);
+        setProviderService(providerServiceData);
+        setUsers(userData);
         setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -186,28 +234,44 @@ export default function SearchPage() {
               <div className="mt-10">
                 <h2 className="mb-4 text-2xl font-bold">Service Providers</h2>
                 <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4">
-                  {serviceProvider.map((provider) => (
-                    <div
-                      key={provider.serviceProviderId}
-                      className="group relative overflow-hidden rounded-lg"
-                    >
-                      <img
-                        src="#"
-                        alt={provider.name}
-                        width={450}
-                        height={300}
-                        className="aspect-[3/2] w-full object-cover transition-opacity group-hover:opacity-50"
-                      />
-                      <div className="bg-background p-4">
-                        <h3 className="text-lg font-semibold">
-                          {provider.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {provider.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                  {serviceProvider
+                    .filter((provider) =>
+                      providerService.some(
+                        (ps) =>
+                          ps.serviceProviderId === provider.serviceProviderId &&
+                          ps.serviceId === service.serviceId,
+                      ),
+                    )
+                    .map((provider) => {
+                      console.log("provider user id: " + provider.userId);
+                      const PUser = users.find(~
+                        (u: User) => u.id === provider.userId,
+                      );
+                      console.log("Da User: " + PUser.FirstName);
+                      if (!PUser) return null;
+                      return (
+                        <div
+                          key={provider.serviceProviderId}
+                          className="group relative overflow-hidden rounded-lg"
+                        >
+                          <img
+                            src={PUser.image}
+                            alt={PUser.username}
+                            width={450}
+                            height={300}
+                            className="aspect-[3/2] w-full object-cover transition-opacity group-hover:opacity-50"
+                          />
+                          <div className="bg-background p-4">
+                            <h3 className="text-lg font-semibold">
+                              {PUser.firstName} {PUser.lastName}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {PUser.iography}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </TabsContent>
