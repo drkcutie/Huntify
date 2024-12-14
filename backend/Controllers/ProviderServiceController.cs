@@ -83,6 +83,25 @@ namespace backend.Controllers
 
             return CreatedAtAction("GetProviderService", new { id = providerService.ProviderServiceId }, providerService);
         }
+        
+        [HttpPost("PostProviderServiceDto")]
+        public async Task<ActionResult<ProviderService>> PostProviderServiceDto(PostProviderServiceDto postProviderServiceDto)
+        {
+            var providerService = new ProviderService
+            {
+                ServiceProviderId = postProviderServiceDto.ServiceProviderId,
+                ServiceId = postProviderServiceDto.ServiceId,
+                Rate = postProviderServiceDto.Rate,
+                RateType = postProviderServiceDto.RateType,
+                Description = postProviderServiceDto.Description,
+                YearsOfExperience = postProviderServiceDto.YearsOfExperience
+            };
+            
+            _context.ProviderServices.Add(providerService);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProviderService", new { id = providerService.ProviderServiceId }, providerService);
+        }
 
         // DELETE: api/ProviderService/5
         [HttpDelete("{id}")]

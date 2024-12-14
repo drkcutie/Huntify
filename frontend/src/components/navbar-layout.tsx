@@ -43,8 +43,8 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Installation",
-          url: "#",
+          title: "Feed",
+          url: "/feed",
         },
         {
           title: "Project Structure",

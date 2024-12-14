@@ -23,6 +23,9 @@ public class Post
     public UserModel User { get; set; } = null!;
     public ICollection<PostLike> PostLikes { get;  } = new List<PostLike>();
     public ICollection<PostImage> PostImages { get; }= new List<PostImage>();
-
-
+}
+public class PostDto(){
+public int UserId { get; set; }
+public string Title { get; set; } = null!;
+public string Description { get; set; } = null!;
 }
