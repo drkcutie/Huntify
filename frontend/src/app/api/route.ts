@@ -32,7 +32,6 @@ interface RegisterRequest {
   accountType: number;
 }
 
-let IsLoggedIn :boolean;
 
 export async function createCookies(data: any) {
   const cookieStore = await cookies();
@@ -44,21 +43,12 @@ export async function createCookies(data: any) {
     secure: true,
     path: "/",
   });
-<<<<<<< HEAD
-  IsLoggedIn = true;
-=======
->>>>>>> 469428c8d0f4cd93e8f1cde0339ffb9660aacf09
   await decode(); // Decode token after setting cookie
   redirect("/home");
 }
 
 export async function deleteCookie() {
-<<<<<<< HEAD
     (await cookies()).delete("currentUser");
-    IsLoggedIn = false;
-=======
-  (await cookies()).delete("currentUser");
->>>>>>> 469428c8d0f4cd93e8f1cde0339ffb9660aacf09
 }
 
 export async function getCookie(): Promise<string | null> {
