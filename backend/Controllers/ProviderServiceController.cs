@@ -28,6 +28,17 @@ namespace backend.Controllers
             return await _context.ProviderServices.ToListAsync();
         }
 
+        [HttpGet("getProviderServiceID")]
+        public async Task<ActionResult<List<ProviderService>>> GetProviderServicesByServiceProviderId([FromQuery]int serviceProviderId)
+    {
+        var providerServices = await _context.ProviderServices
+       .Include(ps => ps.Service)
+       .Where(ps => ps.ServiceProviderId == serviceProviderId)
+       .ToListAsync();
+
+        return Ok(providerServices);
+    }
+
         // GET: api/ProviderService/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProviderService>> GetProviderService(int id)
