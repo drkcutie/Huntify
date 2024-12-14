@@ -76,7 +76,7 @@ export default function SearchPage() {
     fetchData();
   }, []);
   //ANY . REMOVE IF NOT WORKING
-  const groupedServices = services.reduce((acc :any, service :any) => {
+  const groupedServices = services.reduce((acc , service ) => {
     if (!acc[service.serviceType]) {
       acc[service.serviceType] = [];
     }
@@ -143,7 +143,8 @@ export default function SearchPage() {
                     {serviceType.toUpperCase()}
                   </h2>
                   <div className="flex flex-row flex-nowrap justify-start h-[500px] items-center gap-6 overflow-x-scroll no-scrollbar snap-x snap-mandatory">
-                    {groupedServices[serviceType].map((service :any) => (
+                    {groupedServices[serviceType].map((service ) => (
+                        
                       <div
                         key={service.serviceId}
                         className="flex flex-col justify-center  items-center w-1/4 h-[400px] p-2 snap-center"
