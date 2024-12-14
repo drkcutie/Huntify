@@ -79,7 +79,13 @@ const data = {
     {
       title: "Category",
       url: "/search",
-      items: [],
+      items: [
+        {
+         title: "Browse Category",
+          url :"/search"
+              
+        }
+      ],
     },
   ],
 };

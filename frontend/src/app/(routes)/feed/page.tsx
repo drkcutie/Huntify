@@ -9,6 +9,8 @@ import CameraPopup from "@/components/large/CameraPopup";
 
 export default function FeedPage() {
     //TODO: Implement the FeedPage component, Fetch ID and POst
+    
+    
     return (
         <>
             <NavbarLayout>

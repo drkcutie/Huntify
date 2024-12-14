@@ -3,6 +3,10 @@ import Cookies from "js-cookie";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import {NextResponse} from "next/server";
+import path from "path";
+import fs from "fs/promises";
+import {FaL} from "react-icons/fa6";
 
 interface LoginRequest {
   username: string;
@@ -28,6 +32,7 @@ interface RegisterRequest {
   accountType: number;
 }
 
+
 export async function createCookies(data: any) {
   const cookieStore = await cookies();
   cookieStore.set({
@@ -43,7 +48,7 @@ export async function createCookies(data: any) {
 }
 
 export async function deleteCookie() {
-  (await cookies()).delete("currentUser");
+    (await cookies()).delete("currentUser");
 }
 
 export async function getCookie(): Promise<string | null> {
@@ -189,3 +194,5 @@ export async function PostService(data: PostProviderServiceDto) {
     console.error("Error posting service:", error);
   }
 }
+
+

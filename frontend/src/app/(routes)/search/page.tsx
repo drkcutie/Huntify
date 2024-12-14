@@ -5,6 +5,7 @@ import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import NavbarLayout from "@/components/navbar-layout";
 
 // Define the Skill interface based on your backend model
 interface Service {
@@ -134,7 +135,8 @@ export default function SearchPage() {
 
   return (
     <>
-      <Navbar />
+      <NavbarLayout>
+        
       <div className="flex flex-col items-center justify-center">
         <h1 className="mb-4 text-4xl font-bold">Lets Hunt for the Service</h1>
         <h1 className="mb-4 text-4xl font-bold">You Need!</h1>
@@ -278,7 +280,7 @@ export default function SearchPage() {
           ))}
         </Tabs>
       </div>
-
+      </NavbarLayout>
       <Footer />
     </>
   );
