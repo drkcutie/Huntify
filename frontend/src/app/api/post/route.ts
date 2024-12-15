@@ -80,5 +80,8 @@ export async  function getAllPost(){
   if (!response.ok) {
     throw new Error(`Error: ${response.statusText}`);
   }
-  return await response.json();
+  
+  const res = await response.json();
+  console.log(res)
+  return res;
 }

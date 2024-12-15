@@ -197,7 +197,8 @@ function UserMenu() {
     fetchName();
   }, []); //
   function handleLogout() {
-    deleteCookie().then((r) => redirect("/auth/login"));
+    deleteCookie()
+    redirect('auth/login')
   }
 
   function handleProfile(){

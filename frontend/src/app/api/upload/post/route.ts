@@ -37,9 +37,10 @@ export const POST = async (req: any) => {
     try {
       const postImageName  = nanoid()
       const extension = filename.substring(filename.lastIndexOf('.'));
-      const uploadPath = path.join(process.cwd(), "uploads/post", postImageName + extension);
+      const uploadPath = path.join(process.cwd(), "public/uploads/post", postImageName + extension);
+      const postImagePath = postImageName + extension;
       await fs.writeFile(uploadPath, buffer);
-      fileResponses.push({path : uploadPath});
+      fileResponses.push({path : postImagePath});
     } catch (error) {
       console.log("Error occurred while writing file:", error);
       fileResponses.push({filename , status: "Failed" });

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models.User
 {
+    
     public class SeekrDbContext : DbContext
     {
         public SeekrDbContext(DbContextOptions<SeekrDbContext> options) : base(options)
