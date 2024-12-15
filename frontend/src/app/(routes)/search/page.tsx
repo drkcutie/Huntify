@@ -268,7 +268,7 @@ export default function SearchPage() {
                                 {PUser.firstName} {PUser.lastName}
                               </h3>
                               <p className="text-sm text-muted-foreground">
-                                {PUser.iography}
+                                {PUser.Biography}
                               </p>
                             </div>
                           </div>
