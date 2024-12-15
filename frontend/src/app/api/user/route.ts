@@ -1,3 +1,4 @@
+"use server"
 import { getUserId } from "@/app/api/route";
 
 export async function getUser() {
@@ -20,11 +21,36 @@ export async function getUser() {
   }
   return await response.json();
 }
+
+export async function getUserUsingID(userId : number){
+    const response = await fetch(
+        `http://localhost:5000/api/UserModel/${userId}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+    return await response.json();
+}
+
+export async function getNameUsingId(userId : number)
+{
+    const data = await getUserUsingID(userId);
+    const name = data.firstName + " " + data.lastName;
+    return name;
+}
 export async function getName() {
   const data = await getUser();
   const name = data.firstName + " " + data.lastName;
   return name;
 }
+
 
 export async function getFirstName() {
     const data = await getUser();

@@ -53,14 +53,14 @@ export default function FeedPage() {
                             {posts.length > 0 ? (
                                 posts.map((post: Post) => (
                                     <PostCard
+                                        key = {post.postId}
                                         userId = {post.userId} 
-                                        postId = {post.postId} // Always include a unique key for list items in React
-                                        serviceProviderId={post.userId} // Assuming you want to use the userId as the serviceProviderId
-                                        title={post.title} // Dynamic title from the post
-                                        content={post.description} // Dynamic description or content from the post
-                                        serviceProvider={post.user ? post.user.name : "Unknown"} // Assuming user data exists, otherwise use a fallback like "Unknown"
-                                        location={post.location || "Location"} // You can replace this with actual location if available
-                                        image={post.postImages} // Use the first image, or fallback to a placeholder
+                                        postId = {post.postId} 
+                                        title={post.title} 
+                                        content={post.description} 
+                                        serviceProvider={post.user ? post.user.name : "Unknown"} 
+                                        location={post.location || "Location"} 
+                                        images={post.postImages} 
                                         rating={1.5}
                                     />
                                 ))

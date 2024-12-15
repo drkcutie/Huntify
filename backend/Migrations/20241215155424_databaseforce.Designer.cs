@@ -12,8 +12,8 @@ using backend.Models.User;
 namespace backend.Migrations
 {
     [DbContext(typeof(SeekrDbContext))]
-    [Migration("20241207080809_UpdateServiceUniqueValidator")]
-    partial class UpdateServiceUniqueValidator
+    [Migration("20241215155424_databaseforce")]
+    partial class databaseforce
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,7 +181,13 @@ namespace backend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int?>("ServiceProviderModelServiceProviderId")
                         .HasColumnType("integer");
@@ -192,7 +198,8 @@ namespace backend.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("ServiceId");
 
@@ -209,10 +216,24 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProviderServiceId"));
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<double>("Rate")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("RateType")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ServiceProviderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("YearsOfExperience")
                         .HasColumnType("integer");
 
                     b.HasKey("ProviderServiceId");
@@ -397,6 +418,10 @@ namespace backend.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("CoverPhoto")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateOnly>("CreatedOn")
                         .HasColumnType("date");
 
@@ -420,8 +445,8 @@ namespace backend.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("ProfilePicture")
                         .IsRequired()

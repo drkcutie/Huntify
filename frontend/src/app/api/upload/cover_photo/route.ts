@@ -15,7 +15,7 @@ export const POST = async (req, res) => {
     console.log(filename);
     try {
         await writeFile(
-            path.join(process.cwd(), "uploads/cover_photo" + filename),
+            path.join(process.cwd(), "public/uploads/cover_photo" + filename),
             buffer
         );
         return NextResponse.json({ Message: "Cover photo upload success", status: 201 });

@@ -22,14 +22,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import Progressbar from "@/components/ui/progressbar";
 import ProgressBar from "@/components/ui/progressbar";
-import {createPost} from "@/app/api/post/route";
+import { createPost } from "@/app/api/post/route";
 
 export default function CreateAPostCard() {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fadeClass, setFadeClass] = useState("opacity-0"); // Controls opacity for fade-in and fade-out
   const [location, setLocation] = useState("");
-  const [title,setTitle] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,6 @@ export default function CreateAPostCard() {
     input.click();
   };
 
-
   useEffect(() => {
     if (!isLoading) return;
 
@@ -73,26 +72,24 @@ export default function CreateAPostCard() {
     return () => clearInterval(timer);
   }, [isLoading]);
 
-
-
   const handleFileUpload = async () => {
-    if (images == null || images.length === 0){
+    if (images == null || images.length === 0) {
       console.log("No files uploaded, proceeding without images");
       return;
     }
-    
+
     const formData = new FormData();
     images.forEach((file) => formData.append("file", file));
-    
+
     try {
       const response = await fetch("/api/upload/post", {
         method: "POST",
         body: formData,
       });
       const result = await response.json();
-      
+
       console.log(result);
-      
+
       return result; // Handle success case
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -104,9 +101,9 @@ export default function CreateAPostCard() {
       }, 3000);
     }
   };
-  
+
   const handlePostContent = async () => {
-    let images : string [] = []; 
+    let images: string[] = [];
     if (!title.trim() || !description.trim()) {
       setErrorMessage("Fill all the fields");
       setShowError(true);
@@ -116,30 +113,26 @@ export default function CreateAPostCard() {
         setShowError(false);
       }, 3000);
       return;
-    } 
-      
-    
-    
-    
-    const result = await handleFileUpload ();
-    if (result) {
-      const filenames = result.files.map((file: { path: string }) => file.path);
-      setImagesPath((prevImages) => [...prevImages, ...filenames]); 
-      console.log("Images file name: ", filenames); 
-      
     }
-    try{
-      const response = createPost({location: location ,title: title, description: description, images:imagesPath});
-    }catch(error){
-      console.log(error)
-    }
-    
+
+    const result = await handleFileUpload();
+    const filenames = await result.files.map(
+      (file: { path: string }) => file.path,
+    );
+    setImagesPath((prevImages) => [...prevImages, ...filenames]);
+    const response = createPost({
+      location: location,
+      title: title,
+      description: description,
+      images: imagesPath,
+    });
+
     if (result) {
       console.log("Post content with images:", result);
       setTitle(""); // Clear input after posting
       setDescription("");
       setImages([]); // Clear images after posting
-    }else if(!result){
+    } else if (!result) {
       setTitle(""); // Clear input after posting
       setDescription("");
       setImages([]); // Clear images after posting
@@ -173,7 +166,7 @@ export default function CreateAPostCard() {
           <p>Description</p>
           <Textarea
             placeholder="Give a brief description"
-            value = {description}
+            value={description}
             onInput={(e) => setDescription(e.currentTarget.value)}
             className=""
           />
@@ -223,7 +216,7 @@ export default function CreateAPostCard() {
               ))}
             </div>
           )}
-          {isLoading && <Progress value = {progress} />}
+          {isLoading && <Progress value={progress} />}
         </section>
       </div>
     </>

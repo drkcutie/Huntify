@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class databaseforce : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,12 +36,13 @@ namespace backend.Migrations
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedOn = table.Column<DateOnly>(type: "date", nullable: false),
                     UpdatedOn = table.Column<DateOnly>(type: "date", nullable: false),
                     Biography = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    ProfilePicture = table.Column<string>(type: "text", nullable: false)
+                    ProfilePicture = table.Column<string>(type: "text", nullable: false),
+                    CoverPhoto = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -277,8 +278,9 @@ namespace backend.Migrations
                     ServiceId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ServiceType = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     ServiceProviderModelServiceProviderId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -298,7 +300,11 @@ namespace backend.Migrations
                     ProviderServiceId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ServiceProviderId = table.Column<int>(type: "integer", nullable: false),
-                    ServiceId = table.Column<int>(type: "integer", nullable: false)
+                    ServiceId = table.Column<int>(type: "integer", nullable: false),
+                    Rate = table.Column<double>(type: "double precision", nullable: false),
+                    RateType = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    YearsOfExperience = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
