@@ -17,11 +17,12 @@ interface PostProps {
   serviceProvider: string;
   location: string;
   rating: number;
-  image: string;
+  image: string [];
 }
 
 export function PostCard({
-  serviceProviderId,
+  postId,
+  userId,
   title,
   content,
   serviceProvider,
@@ -36,7 +37,7 @@ export function PostCard({
   }
 
   return (
-    <Card key={serviceProviderId}>
+    <Card key={postId}>
       <CardHeader>
         <div className="flex items-center space-x-4">
           <Avatar>
@@ -57,7 +58,7 @@ export function PostCard({
           height={300}
           className="mb-4 h-64 w-full rounded-md object-cover"
         />
-        <p className=''>{content}</p>
+        <p className="">{content}</p>
         <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
           <MapPin className="mr-1 h-7 w-7" />
           <span>{location}</span>
@@ -79,7 +80,7 @@ export function PostCard({
           Like
         </Button>
         <Button variant="ghost" size="sm">
-          <MessageCircle className="mr-2 h-4 w-4 hover:animate-in " />
+          <MessageCircle className="mr-2 h-4 w-4 hover:animate-in" />
           Comment
         </Button>
       </CardFooter>

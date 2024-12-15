@@ -34,6 +34,7 @@ export default function CreateAPostCard() {
   const [images, setImages] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [imagesPath, setImagesPath] = useState<string[]>([]);
   useEffect(() => {
     console.log(description);
   }, [description]);
@@ -79,16 +80,19 @@ export default function CreateAPostCard() {
       console.log("No files uploaded, proceeding without images");
       return;
     }
+    
     const formData = new FormData();
     images.forEach((file) => formData.append("file", file));
-
+    
     try {
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/upload/post", {
         method: "POST",
         body: formData,
       });
       const result = await response.json();
+      
       console.log(result);
+      
       return result; // Handle success case
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -103,9 +107,8 @@ export default function CreateAPostCard() {
   
   const handlePostContent = async () => {
     let images : string [] = []; 
-    setIsLoading(true);
     if (!title.trim() || !description.trim()) {
-      setErrorMessage("Content cannot be empty");
+      setErrorMessage("Fill all the fields");
       setShowError(true);
       setFadeClass("opacity-100");
       setTimeout(() => {
@@ -114,15 +117,19 @@ export default function CreateAPostCard() {
       }, 3000);
       return;
     } 
+      
+    
+    
     
     const result = await handleFileUpload ();
-    if(result){
-      images  = result.files.map((file : any ) => file.filename);
-      console.log("Images file name: ", images)
+    if (result) {
+      const filenames = result.files.map((file: { path: string }) => file.path);
+      setImagesPath((prevImages) => [...prevImages, ...filenames]); 
+      console.log("Images file name: ", filenames); 
+      
     }
     try{
-      const response = createPost({title: title, description: description, images: images});
-      //TODO 
+      const response = createPost({location: location ,title: title, description: description, images:imagesPath});
     }catch(error){
       console.log(error)
     }
@@ -130,7 +137,11 @@ export default function CreateAPostCard() {
     if (result) {
       console.log("Post content with images:", result);
       setTitle(""); // Clear input after posting
-      setDescription("")
+      setDescription("");
+      setImages([]); // Clear images after posting
+    }else if(!result){
+      setTitle(""); // Clear input after posting
+      setDescription("");
       setImages([]); // Clear images after posting
     }
   };
@@ -162,6 +173,7 @@ export default function CreateAPostCard() {
           <p>Description</p>
           <Textarea
             placeholder="Give a brief description"
+            value = {description}
             onInput={(e) => setDescription(e.currentTarget.value)}
             className=""
           />

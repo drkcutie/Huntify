@@ -3,6 +3,8 @@ import path from 'path';
 import fs from 'fs/promises';
 import {nanoid} from 'nanoid';
 
+
+//Upload to PostImages
 export const POST = async (req: any) => {
   console.log("Inside");
   // Get form data
@@ -37,10 +39,10 @@ export const POST = async (req: any) => {
       const extension = filename.substring(filename.lastIndexOf('.'));
       const uploadPath = path.join(process.cwd(), "uploads/post", postImageName + extension);
       await fs.writeFile(uploadPath, buffer);
-      fileResponses.push({ filename, status: "Success" });
+      fileResponses.push({path : uploadPath});
     } catch (error) {
       console.log("Error occurred while writing file:", error);
-      fileResponses.push({ filename, status: "Failed" });
+      fileResponses.push({filename , status: "Failed" });
     }
   }
   return NextResponse.json({ files: fileResponses, status: 201 });
