@@ -17,9 +17,6 @@ import Link from "next/link";
 
 export default function LandingPage() {
   const [isCurrentUser, setIsCurrentUser] = React.useState(false);
-  
-  
-  
   return (
       <>
         <NavbarLayout>

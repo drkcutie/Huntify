@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import Link from "next/link";
 import { GalleryVerticalEnd, Menu, ShoppingCart, User } from "lucide-react";
 
@@ -34,6 +34,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { deleteCookie } from "@/app/api/route";
 import { redirect } from "next/navigation";
 import { FaUsersViewfinder } from "react-icons/fa6";
+import {getEmail, getName, getUsername} from "@/app/api/user/route";
 
 // This is sample data.
 const data = {
@@ -164,6 +165,37 @@ function MainNav() {
 }
 
 function UserMenu() {
+
+  const [name, setName] = useState<string | null>(null);
+  const [email , setEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchName = async () => {
+      try {
+        const   fetchedFullName = await getName(); // Assume this returns a string or null
+        setName(fetchedFullName); // Directly store the string (or null)
+      } catch (err) {
+        setError("Failed to load full name");
+        console.log(err);
+      } finally {
+        setLoading(false); // Stop loading once the fetch is done
+      }
+    };
+    const  fetchEmail = async () => {
+      try {
+        const fetchEmail = await getEmail(); 
+        setEmail(fetchEmail); 
+      } catch (err) {
+        setError("Failed to load email");
+        console.log(err);
+      } finally {
+        setLoading(false); 
+      }
+    };
+    fetchEmail();
+    fetchName();
+  }, []); //
   function handleLogout() {
     deleteCookie().then((r) => redirect("/auth/login"));
   }
@@ -186,9 +218,9 @@ function UserMenu() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">John Doe</p>
+            <p className="text-sm font-medium leading-none">{name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              john@example.com
+              {email}
             </p>
           </div>
         </DropdownMenuLabel>

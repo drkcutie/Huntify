@@ -25,3 +25,11 @@ public class PostLike
     public UserModel User { get; set; } = null!;
     
 }
+
+public class PostLikeDto
+{
+    public int PostId { get; set; }
+    public int UserId { get; set; }
+    public bool Like { get; set; }
+    
+}

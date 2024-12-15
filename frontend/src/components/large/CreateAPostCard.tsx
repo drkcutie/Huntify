@@ -22,18 +22,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import Progressbar from "@/components/ui/progressbar";
 import ProgressBar from "@/components/ui/progressbar";
+import {createPost} from "@/app/api/post/route";
 
 export default function CreateAPostCard() {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fadeClass, setFadeClass] = useState("opacity-0"); // Controls opacity for fade-in and fade-out
   const [location, setLocation] = useState("");
-  const [content, setContent] = useState("");
+  const [title,setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
     console.log(description);
   }, [description]);
@@ -75,7 +75,10 @@ export default function CreateAPostCard() {
 
 
   const handleFileUpload = async () => {
-    if (images == null) return;
+    if (images == null || images.length === 0){
+      console.log("No files uploaded, proceeding without images");
+      return;
+    }
     const formData = new FormData();
     images.forEach((file) => formData.append("file", file));
 
@@ -98,10 +101,10 @@ export default function CreateAPostCard() {
     }
   };
   
-
   const handlePostContent = async () => {
+    let images : string [] = []; 
     setIsLoading(true);
-    if (!content.trim()) {
+    if (!title.trim() || !description.trim()) {
       setErrorMessage("Content cannot be empty");
       setShowError(true);
       setFadeClass("opacity-100");
@@ -110,12 +113,24 @@ export default function CreateAPostCard() {
         setShowError(false);
       }, 3000);
       return;
+    } 
+    
+    const result = await handleFileUpload ();
+    if(result){
+      images  = result.files.map((file : any ) => file.filename);
+      console.log("Images file name: ", images)
     }
-    const result = await handleFileUpload();
+    try{
+      const response = createPost({title: title, description: description, images: images});
+      //TODO 
+    }catch(error){
+      console.log(error)
+    }
+    
     if (result) {
-      // Handle successful file upload (e.g., send content to your API, etc.)
-      console.log("Post content with images:", content);
-      setContent(""); // Clear input after posting
+      console.log("Post content with images:", result);
+      setTitle(""); // Clear input after posting
+      setDescription("")
       setImages([]); // Clear images after posting
     }
   };
@@ -139,8 +154,8 @@ export default function CreateAPostCard() {
             type="text"
             placeholder="What's on your mind?"
             className="rounded-xl"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </section>
         <section className="flex flex-col gap-2">
