@@ -25,8 +25,10 @@ interface User {
 }
 interface ProviderService {
   serviceId: number;
-  serviceType: string;
   title: string;
+  rate: number;
+  rateType: number;
+  experience: number;
   description: string;
   image: string;
   serviceProviderId: number;
@@ -249,8 +251,14 @@ export default function SearchPage() {
                         const PUser = users.find(
                           (u: User) => u.id === provider.userId,
                         );
-                        console.log("Da User: " + PUser.FirstName);
                         if (!PUser) return null;
+                        const providerServiceDetails = providerService.find(
+                          (ps) =>
+                            ps.serviceProviderId ===
+                              provider.serviceProviderId &&
+                            ps.serviceId === service.serviceId,
+                        );
+                        if (!providerServiceDetails) return null;
                         return (
                           <div
                             key={provider.serviceProviderId}
@@ -267,6 +275,27 @@ export default function SearchPage() {
                               <h3 className="text-lg font-semibold">
                                 {PUser.firstName} {PUser.lastName}
                               </h3>
+                              <p className="text-sm text-muted-foreground">
+                                Rate: {providerServiceDetails.rate}{" "}
+                                {providerServiceDetails.rateType === 0
+                                  ? "Per Hour"
+                                  : providerServiceDetails.rateType === 1
+                                    ? "Per Order"
+                                    : "Unknown"}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Experience:{" "}
+                                {providerServiceDetails.experience === 0
+                                  ? "Less Than 1 Year "
+                                  : providerServiceDetails.experience === 1
+                                    ? "1-3 Years "
+                                    : providerServiceDetails.experience === 2
+                                      ? "3-5 Years "
+                                      : providerServiceDetails.experience === 3
+                                        ? "More Than 5 Years "
+                                        : "Unknown"}
+                                Experience
+                              </p>
                               <p className="text-sm text-muted-foreground">
                                 {PUser.Biography}
                               </p>

@@ -2,10 +2,12 @@
 import Navbar from "@/components/large/NavBar";
 import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { decode } from "@/app/api/route";
 
 import React, { useEffect, useState } from "react";
 import ProfileSettingsPage from "@/components/large/ProfileSettingsPage";
 import NavbarLayout from "@/components/navbar-layout";
+import { JwtPayload } from "jwt-decode";
 
 export default function SettingsPage() {
   // State to keep track of the currently selected settings option
@@ -13,8 +15,18 @@ export default function SettingsPage() {
     "profile",
   );
   const [isClient, setIsClient] = useState<boolean>();
+  const [decoded, setDecoded] = useState<JwtPayload | null>(null);
 
   useEffect(() => {
+    const fetchDecoded = async () => {
+      const decodedData = await decode();
+      if (decodedData !== undefined) {
+        setDecoded(decodedData);
+      } else {
+        setDecoded(null); // or handle the case where decodedData is undefined
+      }
+    };
+    fetchDecoded();
     setIsClient(true); // Set to true after the initial render (client-side)
   }, []);
 
@@ -40,6 +52,7 @@ export default function SettingsPage() {
     }
   };
   const ProfileSettings = () => <ProfileSettingsPage />;
+
   const HistorySettings = () => (
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-bold">History</h2>

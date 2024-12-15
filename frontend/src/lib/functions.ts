@@ -5,6 +5,7 @@ export function getRateTypeAndExperience(
   experience: number,
 ): { rateType: string; experience: string } {
   const rateTypeString = rateType === 0 ? "Per Hour" : "Per Order";
+  console.log("experince num: " + experience);
   const experienceString =
     experience === 0
       ? "Less Than 1 Year Experience"
