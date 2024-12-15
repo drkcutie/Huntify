@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -76,13 +77,39 @@ namespace backend.Controllers
         // POST: api/PostImage
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PostImage>> PostPostImage(PostImage postImage)
+        public async Task<ActionResult<PostImage>> CreatePostImage(PostImage postImage)
         {
             _context.PostImages.Add(postImage);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPostImage", new { id = postImage.PostImageId }, postImage);
         }
+        
+        
+        
+        [HttpPost("CreatePostImages")]
+        public async Task<IActionResult> UploadFileNames(PostImageDto postImageDto)
+        {
+            if (postImageDto.ImagePath.Length == 0)
+            {
+                    return BadRequest(new { Message = "No file uploaded" }); 
+            }
+            var order = 1;
+            foreach (var path in postImageDto.ImagePath)
+            {
+                var postImage = new PostImage
+                {
+                    PostId = postImageDto.PostId,
+                    ImagePath = path,
+                    PostImageOrder = order++ 
+                };
+                _context.PostImages.Add(postImage);
+            }
+            await _context.SaveChangesAsync();
+            return Ok(new { Message = "File names uploaded successfully", Count = order});
+        }
+        
+        
 
         // DELETE: api/PostImage/5
         [HttpDelete("{id}")]

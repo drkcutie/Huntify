@@ -3,10 +3,6 @@ import Cookies from "js-cookie";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-import {NextResponse} from "next/server";
-import path from "path";
-import fs from "fs/promises";
-import {FaL} from "react-icons/fa6";
 
 interface LoginRequest {
   username: string;
@@ -32,7 +28,6 @@ interface RegisterRequest {
   accountType: number;
 }
 
-
 export async function createCookies(data: any) {
   const cookieStore = await cookies();
   cookieStore.set({
@@ -48,7 +43,7 @@ export async function createCookies(data: any) {
 }
 
 export async function deleteCookie() {
-    (await cookies()).delete("currentUser");
+  (await cookies()).delete("currentUser");
 }
 
 export async function getCookie(): Promise<string | null> {
@@ -139,18 +134,33 @@ export async function registerUser(data: RegisterRequest) {
 export async function decode() {
   const token = await getCookie(); // Wait for the cookie to be fetched
   console.log("Token:", token);
-
   if (!token) {
     console.log("No token found");
     return null;
   }
-
   try {
     const decoded = jwtDecode(token);
     console.log("Decoded token:", decoded);
     return decoded;
   } catch (error) {
     console.error("Failed to decode token", error);
+  }
+}
+
+export async function getUserId(): Promise<number | null> {
+  
+  try {
+    const decoded = await decode(); // Call the decode function
+    if (!decoded) {
+      console.log("Decoded token is null");
+      return null; // Return null explicitly if decoded is null
+    }
+    
+    // Access id only if decoded is not null
+    return decoded.id;
+  } catch (error) {
+    console.error("Error getting user ID:", error);
+    return null; // Return null in case of an error
   }
 }
 
@@ -194,5 +204,3 @@ export async function PostService(data: PostProviderServiceDto) {
     console.error("Error posting service:", error);
   }
 }
-
-

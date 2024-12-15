@@ -75,12 +75,30 @@ namespace backend.Controllers
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Post>> CreatePost(Post post)
         {
             _context.Posts.Add(post);
+            
             await _context.SaveChangesAsync();
-
+            
             return CreatedAtAction("GetPost", new { id = post.PostId }, post);
+        }
+        
+        [HttpPost("CreatePostUsingDto")]
+        public async Task<ActionResult<Post>>  CreatePostUsingDto (PostDto postDto)
+        {
+            var post = new Post()
+            {
+                UserId = postDto.UserId,
+                Title = postDto.Title,
+                Description = postDto.Description
+            };
+            _context.Posts.Add(post);
+            await _context.SaveChangesAsync();
+            
+            
+            return CreatedAtAction("GetPost", new { id = post.PostId }, post);
+            
         }
 
         // DELETE: api/Post/5

@@ -17,5 +17,12 @@ public class PostImage
     
     //Relationship
     public Post Post { get; set; } = null!;
+}
 
+
+
+public class PostImageDto
+{
+    public int PostId { get; set; }
+    public string [] ImagePath { get; set; } = null!;
 }
