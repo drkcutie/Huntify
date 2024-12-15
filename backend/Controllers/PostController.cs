@@ -21,11 +21,13 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // GET: api/Post
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        // GET: api/Post | Get all posts including their corresponding images
+        [HttpGet("GetAllPosts")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetAllPosts()
         {
-            return await _context.Posts.ToListAsync();
+            var posts = await _context.Posts.Include(posts => posts.PostImages).ToListAsync();
+            
+            return posts;
         }
         // GET: api/Post/5
         [HttpGet("{id}")]

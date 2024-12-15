@@ -30,7 +30,6 @@ namespace backend.Controllers
 
         // GET: api/UserModel/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<UserModel>> GetUserModel(int id)
         {
             var userModel = await _context.Users.FindAsync(id);
@@ -39,7 +38,6 @@ namespace backend.Controllers
             {
                 return NotFound();
             }
-
             return userModel;
         }
 
@@ -164,8 +162,8 @@ namespace backend.Controllers
             {
                 result = "success",
                 token = getToken.Value
-                
             } });
+            
         }
 
         [Authorize]

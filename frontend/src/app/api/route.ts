@@ -69,7 +69,7 @@ export async function loginUser(data: LoginRequest) {
     const result = await response.json();
     await createCookies(result);
   } catch (error) {
-    console.error("Error logging in:", error);
+    console.log("Error logging in:", error);
     throw error;
   }
 }
@@ -132,7 +132,7 @@ export async function registerUser(data: RegisterRequest) {
 }
 
 export async function decode() {
-  const token = await getCookie(); // Wait for the cookie to be fetched
+  const token = await getCookie(); 
   console.log("Token:", token);
   if (!token) {
     console.log("No token found");
@@ -148,19 +148,17 @@ export async function decode() {
 }
 
 export async function getUserId(): Promise<number | null> {
-  
   try {
-    const decoded = await decode(); // Call the decode function
+    const decoded = await decode(); 
     if (!decoded) {
       console.log("Decoded token is null");
-      return null; // Return null explicitly if decoded is null
+      return null
     }
     
-    // Access id only if decoded is not null
     return decoded.id;
   } catch (error) {
     console.error("Error getting user ID:", error);
-    return null; // Return null in case of an error
+    return null
   }
 }
 

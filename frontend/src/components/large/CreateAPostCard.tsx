@@ -34,7 +34,6 @@ export default function CreateAPostCard() {
   const [images, setImages] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
     console.log(description);
   }, [description]);

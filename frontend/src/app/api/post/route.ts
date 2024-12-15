@@ -29,7 +29,6 @@ export async function createPost(postData: Post) {
     const data = await response.json();
     postId = data.postId; 
     console.log("Created post with ID:", postId);
-    
     await createPostImages(postId, postData.images);
   } catch (error) {
     console.error("Error creating post:", error);
@@ -53,7 +52,7 @@ async function createPostImages(postId: number, images: string[]) {
     });
     if(!response.ok){
       const errorData = await response.json();
-      console.error("Error from backend in createPostImages:", errorData);
+      console.log("Error from backend in createPostImages:", errorData);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
@@ -61,4 +60,9 @@ async function createPostImages(postId: number, images: string[]) {
   } catch (error) {
     console.log("Error creating post images", error);
   }
+}
+
+
+export async function getAllPost(){
+  let data = await fetch('http://localhost:5000/')
 }
