@@ -9,9 +9,9 @@ namespace backend.Models.Posts;
 
 public class Post
 {
-    [Key] public int PostId { get; set; }
+     public int PostId { get; set; }
         
-    [ForeignKey("ProviderService")]
+  
     public int ProviderServiceId { get; set; }
 
     public ProviderService ProviderService { get; set; } = null!;

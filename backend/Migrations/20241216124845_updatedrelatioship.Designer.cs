@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Models.User;
@@ -11,9 +12,11 @@ using backend.Models.User;
 namespace backend.Migrations
 {
     [DbContext(typeof(SeekrDbContext))]
-    partial class SeekrDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241216124845_updatedrelatioship")]
+    partial class updatedrelatioship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,9 +118,6 @@ namespace backend.Migrations
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("ProviderServiceId")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
@@ -214,10 +214,7 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Models.Services.ProviderService", b =>
                 {
                     b.Property<int>("ProviderServiceId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProviderServiceId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -504,19 +501,11 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.Posts.Post", b =>
                 {
-                    b.HasOne("backend.Models.Services.ProviderService", "ProviderService")
-                        .WithOne()
-                        .HasForeignKey("backend.Models.Posts.Post", "ProviderServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("backend.Models.User.UserModel", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ProviderService");
 
                     b.Navigation("User");
                 });
@@ -560,6 +549,12 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.Services.ProviderService", b =>
                 {
+                    b.HasOne("backend.Models.Posts.Post", "Post")
+                        .WithOne("ProviderService")
+                        .HasForeignKey("backend.Models.Services.ProviderService", "ProviderServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("backend.Models.Service.Service", "Service")
                         .WithMany("ProviderServices")
                         .HasForeignKey("ServiceId")
@@ -571,6 +566,8 @@ namespace backend.Migrations
                         .HasForeignKey("ServiceProviderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Post");
 
                     b.Navigation("Service");
 
@@ -666,6 +663,9 @@ namespace backend.Migrations
                     b.Navigation("PostImages");
 
                     b.Navigation("PostLikes");
+
+                    b.Navigation("ProviderService")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("backend.Models.Service.Service", b =>

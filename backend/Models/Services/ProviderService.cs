@@ -8,7 +8,7 @@ namespace backend.Models.Services;
 
 public class ProviderService
 {
-    [Key] public int ProviderServiceId { get; set; }
+     public int ProviderServiceId { get; set; }
 
     public int ServiceProviderId { get; set; }
 
@@ -29,7 +29,7 @@ public class ProviderService
 
     public Experience YearsOfExperience { get; set; }
 
-    public Post Post { get; set; } = null!;
+  
 }
 
 public class PostProviderServiceDto
