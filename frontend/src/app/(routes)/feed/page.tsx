@@ -9,8 +9,16 @@ import React, {
 import CreateAPostCard from "@/components/large/CreateAPostCard";
 import NavbarLayout from "@/components/navbar-layout";
 import { PostCard } from "@/components/large/PostCard";
+import {
+  getAllProviderServices,
+  getAllServices,
+  getAllServiceProviders,
+} from "@/app/api/route";
 import { getAllPost } from "@/app/api/post/route";
-import {FeedContext, FeedContext as FeedContext2} from "@/app/(routes)/feed/feedContext";
+import {
+  FeedContext,
+  FeedContext as FeedContext2,
+} from "@/app/(routes)/feed/feedContext";
 
 interface PostImage {
   postImageId: number;
@@ -23,6 +31,7 @@ interface Post {
   userId: number;
   title: string;
   location: string;
+  providerServiceId: number;
   description: string;
   user: any;
   postLikes: any[];
@@ -33,23 +42,24 @@ export interface FeedContextType {
   setFeed: Dispatch<SetStateAction<number>>;
 }
 
-
 export default function FeedPage() {
   //TODO: Implement the FeedPage component, Fetch ID and POst
   const [posts, setPosts] = useState([]);
+  const [services, setServices] = useState([]);
+  const [serviceProviders, setServiceProviders] = useState([]);
   const [providerService, setProviderService] = useState([]);
   useEffect(() => {
     const fetchPost = async () => {
       const fetchedPosts = await getAllPost();
+      const fetchedProviderService = await getAllProviderServices();
+      const fetchedServices = await getAllServices();
+      const fetchedServiceProviders = await getAllServiceProviders();
       setPosts(fetchedPosts);
+      setServices(fetchedServices);
+      setServiceProviders(fetchedServiceProviders);
+      setProviderService(fetchedProviderService);
     };
-    const fetchProviderService = async () => {
-      setProviderService(providerService);
-    };
-    
-    
 
-    fetchProviderService();
     fetchPost();
   }, []);
   const refreshFeed = async () => {
@@ -66,7 +76,7 @@ export default function FeedPage() {
           <section className="mb12 w-3/4">
             <h2 className="mb-4 text-xl font-semibold">Create a Post</h2>
             <div className="rounded-lg bg-white p-5 shadow-md">
-                <CreateAPostCard onPostCreated = {refreshFeed}/> 
+              <CreateAPostCard onPostCreated={refreshFeed} />
             </div>
           </section>
 
@@ -81,6 +91,7 @@ export default function FeedPage() {
                     title={post.title}
                     content={post.description}
                     serviceProvider={post.user ? post.user.name : "Unknown"}
+                    providerServiceId={post.providerServiceId}
                     location={post.location || "Location"}
                     images={post.postImages}
                     rating={1.5}

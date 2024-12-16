@@ -4,6 +4,7 @@ interface Post {
   title: string;
   description: string;
   images: string[];
+  providerServiceId: number;
 }
 
 export async function createPost(postData: {
@@ -11,6 +12,7 @@ export async function createPost(postData: {
   description: string;
   location: string;
   title: string;
+  providerServiceId: number;
 }) {
   const userId = await getUserId();
   let postId: number;
@@ -23,9 +25,10 @@ export async function createPost(postData: {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: userId,
+          providerServiceId: postData.providerServiceId,
           title: postData.title,
           description: postData.description,
-          location : postData.location 
+          location: postData.location,
         }),
       },
     );
@@ -50,15 +53,18 @@ async function createPostImages(postId: number, images: string[]) {
     return;
   }
   try {
-    const  response = await fetch("http://localhost:5000/api/PostImage/CreatePostImages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        postId: postId,
-        imagePath: images //array of image paths
+    const response = await fetch(
+      "http://localhost:5000/api/PostImage/CreatePostImages",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          postId: postId,
+          imagePath: images, //array of image paths
         }),
-    });
-    if(!response.ok){
+      },
+    );
+    if (!response.ok) {
       const errorData = await response.json();
       console.log("Error from backend in createPostImages:", errorData);
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -70,8 +76,8 @@ async function createPostImages(postId: number, images: string[]) {
   }
 }
 
-export async  function getAllPost(){
-  const response = await fetch("http://localhost:5000/api/Post/GetAllPosts",{
+export async function getAllPost() {
+  const response = await fetch("http://localhost:5000/api/Post/GetAllPosts", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -80,13 +86,15 @@ export async  function getAllPost(){
   if (!response.ok) {
     throw new Error(`Error: ${response.statusText}`);
   }
-  
+
   const res = await response.json();
 
-  const sortedPosts = res.sort((a: { postId: number }, b: { postId: number }) => {
-    return b.postId - a.postId;
-  });
-  
-  console.log(res)
+  const sortedPosts = res.sort(
+    (a: { postId: number }, b: { postId: number }) => {
+      return b.postId - a.postId;
+    },
+  );
+
+  console.log(res);
   return sortedPosts;
 }

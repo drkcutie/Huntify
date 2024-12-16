@@ -102,7 +102,7 @@ export default function ProviderPage() {
       });
 
       console.log("Service posted successfully: " + result);
-      redirect("/service_page");
+      // redirect("/services_page");
     } catch (error: any) {
       console.error(
         "Service posting failed: ",

@@ -132,7 +132,7 @@ export async function registerUser(data: RegisterRequest) {
 }
 
 export async function decode() {
-  const token = await getCookie(); 
+  const token = await getCookie();
   console.log("Token:", token);
   if (!token) {
     console.log("No token found");
@@ -149,16 +149,16 @@ export async function decode() {
 
 export async function getUserId(): Promise<number | null> {
   try {
-    const decoded = await decode(); 
+    const decoded = await decode();
     if (!decoded) {
       console.log("Decoded token is null");
-      return null
+      return null;
     }
-    
+
     return decoded.id;
   } catch (error) {
     console.error("Error getting user ID:", error);
-    return null
+    return null;
   }
 }
 
@@ -201,4 +201,48 @@ export async function PostService(data: PostProviderServiceDto) {
   } catch (error) {
     console.error("Error posting service:", error);
   }
+}
+export async function getAllServices() {
+  const response = await fetch("http://localhost:5000/api/Service", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const data = await response.json();
+  return data;
+}
+
+export async function getAllProviderServices() {
+  const response = await fetch("http://localhost:5000/api/ProviderService", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const data = await response.json();
+  return data;
+}
+
+export async function getAllServiceProviders() {
+  const response = await fetch(
+    "http://localhost:5000/api/ServiceProviderModel",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const data = await response.json();
+  return data;
 }

@@ -35,6 +35,7 @@ interface PostData {
   title: string;
   description: string;
   images: string[];
+  providerServiceId: number | null;
 }
 
 interface FileUploadResult {
@@ -56,6 +57,9 @@ export default function CreateAPostCard() {
   const [loading, setLoading] = React.useState(true);
   const [providerServices, setProviderServices] = React.useState([]);
   const [service, setService] = React.useState([]);
+  const [selectedServiceId, setSelectedServiceId] = React.useState<
+    number | null
+  >(null);
 
   // Ref for file input
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -160,6 +164,9 @@ export default function CreateAPostCard() {
     },
     [],
   );
+  useEffect(() => {
+    console.log("The selected Service is: " + selectedServiceId);
+  }, [selectedServiceId]);
 
   // File upload handler
   const handleFileUpload = useCallback(async (): Promise<FileUploadResult> => {
@@ -200,7 +207,6 @@ export default function CreateAPostCard() {
       );
       return;
     }
-
     setIsLoading(true);
     setError(null);
     animateProgressBar();
@@ -221,6 +227,7 @@ export default function CreateAPostCard() {
         title,
         description,
         images: filenames,
+        providerServiceId: selectedServiceId,
       };
 
       // Create post (assuming createPost is imported from your API route)
@@ -273,7 +280,17 @@ export default function CreateAPostCard() {
               <Skeleton className="h-[50px] w-full rounded-xl" />
             </div>
           ) : providerServices.length > 0 ? (
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                console.log("Value found on change: " + value);
+
+                if (value) {
+                  const newServiceId = parseInt(value, 10);
+                  setSelectedServiceId(newServiceId);
+                  console.log("The selected Service is: " + newServiceId);
+                }
+              }}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Choose The Service To Post" />
               </SelectTrigger>
@@ -289,7 +306,7 @@ export default function CreateAPostCard() {
                       <SelectItem
                         className="text-lg"
                         key={providerService.providerServiceId}
-                        value={providerService.serviceId}
+                        value={providerService.providerServiceId}
                       >
                         {serviceData
                           ? serviceData.title.toUpperCase()
