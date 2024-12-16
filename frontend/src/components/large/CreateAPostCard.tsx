@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { IoCameraOutline, IoLocationOutline } from "react-icons/io5";
 import { AiOutlineFileImage } from "react-icons/ai";
-import {createPost} from "@/app/api/post/route";
+import { createPost } from "@/app/api/post/route";
 
 // Types for better type safety
 interface PostData {
@@ -77,13 +77,16 @@ export default function CreateAPostCard() {
   }, []);
 
   // File input change handler
-  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const newImages = Array.from(files);
-      setImages((prevImages) => [...prevImages, ...newImages]);
-    }
-  }, []);
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (files) {
+        const newImages = Array.from(files);
+        setImages((prevImages) => [...prevImages, ...newImages]);
+      }
+    },
+    [],
+  );
 
   // File upload handler
   const handleFileUpload = useCallback(async (): Promise<FileUploadResult> => {
@@ -117,7 +120,11 @@ export default function CreateAPostCard() {
   const handlePostContent = useCallback(async () => {
     // Validate inputs
     if (!title.trim() || !description.trim()) {
-      setError(!title.trim() ? "Please fill in the title" : "Please fill in the description");
+      setError(
+        !title.trim()
+          ? "Please fill in the title"
+          : "Please fill in the description",
+      );
       return;
     }
 
@@ -151,105 +158,125 @@ export default function CreateAPostCard() {
       setProgress(0);
     } catch (error) {
       console.error("Post creation error:", error);
-      setError(error instanceof Error ? error.message : "An unexpected error occurred");
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
     } finally {
       setIsLoading(false);
     }
-  }, [title, description, location, handleFileUpload, animateProgressBar, resetForm]);
+  }, [
+    title,
+    description,
+    location,
+    handleFileUpload,
+    animateProgressBar,
+    resetForm,
+  ]);
 
   return (
-      <>
-        <div className="flex flex-col gap-2">
-          {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-          )}
+    <>
+      <div className="flex flex-col gap-2">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-          <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              multiple
-              accept="image/*"
-              onChange={handleFileInputChange}
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          multiple
+          accept="image/*"
+          onChange={handleFileInputChange}
+        />
+
+        <section className="flex flex-col gap-2">
+          <p>Choose Your Service</p>
+          <Input
+            type="text"
+            placeholder="What's on your mind?"
+            className="rounded-xl"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
+        </section>
 
-          <section className="flex flex-col gap-2">
-            <p>Title</p>
-            <Input
-                type="text"
-                placeholder="What's on your mind?"
-                className="rounded-xl"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+        <section className="flex flex-col gap-2">
+          <p>Title</p>
+          <Input
+            type="text"
+            placeholder="What's on your mind?"
+            className="rounded-xl"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <p>Description</p>
+          <Textarea
+            placeholder="Give a brief description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className=""
+          />
+        </section>
+
+        <section className="ml-5 flex flex-row items-center justify-between gap-2">
+          <div className="flex flex-row gap-5">
+            <IoCameraOutline
+              className="h-5 w-5 cursor-pointer"
+              onClick={handleAddImages}
             />
-          </section>
-
-          <section className="flex flex-col gap-2">
-            <p>Description</p>
-            <Textarea
-                placeholder="Give a brief description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className=""
+            <AiOutlineFileImage
+              className="h-5 w-5 cursor-pointer"
+              onClick={handleAddImages}
             />
-          </section>
+            <Dialog>
+              <DialogTrigger>
+                <IoLocationOutline className="h-5 w-5 cursor-pointer" />
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-gray-700">
+                    Enter Location
+                  </DialogTitle>
+                  <DialogDescription className="flex gap-5">
+                    <Input
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="Enter Location"
+                    />
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <Button
+            className="p-5"
+            onClick={handlePostContent}
+            disabled={isLoading}
+          >
+            {isLoading ? "Posting..." : "Post"}
+          </Button>
+        </section>
 
-          <section className="ml-5 flex flex-row items-center justify-between gap-2">
-            <div className="flex flex-row gap-5">
-              <IoCameraOutline
-                  className="h-5 w-5 cursor-pointer"
-                  onClick={handleAddImages}
-              />
-              <AiOutlineFileImage
-                  className="h-5 w-5 cursor-pointer"
-                  onClick={handleAddImages}
-              />
-              <Dialog>
-                <DialogTrigger>
-                  <IoLocationOutline className="h-5 w-5 cursor-pointer" />
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle className="text-gray-700">
-                      Enter Location
-                    </DialogTitle>
-                    <DialogDescription className="flex gap-5">
-                      <Input
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          placeholder="Enter Location"
-                      />
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
+        <section id="files">
+          {images.length > 0 && (
+            <div className="flex w-2/3 flex-row gap-2 text-sm">
+              {images.map((image, index) => (
+                <p className="truncate hover:text-clip" key={index}>
+                  {image.name}
+                </p>
+              ))}
             </div>
-            <Button
-                className="p-5"
-                onClick={handlePostContent}
-                disabled={isLoading}
-            >
-              {isLoading ? "Posting..." : "Post"}
-            </Button>
-          </section>
-
-          <section id="files">
-            {images.length > 0 && (
-                <div className="flex w-2/3 flex-row gap-2 text-sm">
-                  {images.map((image, index) => (
-                      <p className="truncate hover:text-clip" key={index}>
-                        {image.name}
-                      </p>
-                  ))}
-                </div>
-            )}
-            {isLoading && <Progress value={progress} />}
-          </section>
-        </div>
-      </>
+          )}
+          {isLoading && <Progress value={progress} />}
+        </section>
+      </div>
+    </>
   );
 }

@@ -4,6 +4,7 @@ using backend.Models.Skills_and_Reviews;
 using backend.Models.Service;
 using backend.Models.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System.Text.Json.Serialization;
 
 namespace backend.Models.User
 {
@@ -30,6 +31,7 @@ namespace backend.Models.User
         public ICollection<Service.Service>? Services { get; set; } = new List<Service.Service>();
         public ICollection<ServiceProviderSkill>? ServiceProviderSkills { get; set; } = new List<ServiceProviderSkill>();
         
+        [JsonIgnore]
         public ICollection<ProviderService>? ProviderServices { get; set; } = new List<ProviderService>();
     }
     public class RegisterServiceProviderDto
