@@ -92,7 +92,6 @@ export default function ProviderPage() {
         throw new Error("Selected service not found");
       }
       console.log("service? " + selectedServiceData.serviceId);
-      console.log(decoded.roleId);
       const result = await PostService({
         serviceProviderId: decoded.roleId,
         serviceId: selectedServiceData.serviceId,
@@ -102,7 +101,6 @@ export default function ProviderPage() {
         yearsOfExperience: experience,
       });
       console.log("Service posted successfully: " + result);
-      redirect("/services_page");
     } catch (error: any) {
       console.error(
         "Service posting failed: ",

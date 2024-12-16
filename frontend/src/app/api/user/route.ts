@@ -22,6 +22,16 @@ export async function getUser() {
   return await response.json();
 }
 
+
+
+export async function getServiceProviderId()
+{
+    const data = await getUser();
+    if(data.role == "ServiceProvider"){
+        return data.roleId
+    }
+    return null;
+}
 export async function getUserUsingID(userId : number){
     const response = await fetch(
         `http://localhost:5000/api/UserModel/${userId}`,
