@@ -35,11 +35,51 @@ export default function CreateAPostCard() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [imagesPath, setImagesPath] = useState<string[]>([]);
-  useEffect(() => {
-    console.log(description);
-  }, [description]);
 
-  const handleAddImages = () => {
+  function reset(){
+    setTitle("") ;
+    setDescription("");
+    setImagesPath([]);
+    setImages([]);
+  }
+  function animateProgressBar(){
+    setIsLoading(true);
+    let timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress < 100) {
+          return prevProgress + 1;
+        } else {
+          clearInterval(timer); // Stop the progress once it reaches 100
+          setIsLoading(false);  // Stop loading
+          return prevProgress;
+        }
+      });
+    }, 20);
+    
+  }
+
+  function checkContent() {
+    if (!title.trim() || !description.trim()) {
+      const errorMessage = !title.trim() ? "Fill the title." : "Fill the descriptions.";
+
+      // Update state correctly
+      setErrorMessage(errorMessage);
+      setShowError(true);
+      setFadeClass("opacity-100");
+
+      // Hide the error message after 3 seconds
+      setTimeout(() => {
+        setFadeClass("opacity-0");
+        setShowError(false);
+      }, 3000);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  function handleAddImages(){
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
@@ -52,26 +92,8 @@ export default function CreateAPostCard() {
       }
     };
     input.click();
-  };
-
-  useEffect(() => {
-    if (!isLoading) return;
-
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress < 100) {
-          return prevProgress + 1;
-        } else {
-          clearInterval(timer);
-          setIsLoading(false);
-          return 100;
-        }
-      });
-    }, 20);
-
-    return () => clearInterval(timer);
-  }, [isLoading]);
-
+  }
+  
   const handleFileUpload = async () => {
     if (images == null || images.length === 0) {
       console.log("No files uploaded, proceeding without images");
@@ -101,42 +123,48 @@ export default function CreateAPostCard() {
       }, 3000);
     }
   };
-
   const handlePostContent = async () => {
-    let images: string[] = [];
-    if (!title.trim() || !description.trim()) {
-      setErrorMessage("Fill all the fields");
-      setShowError(true);
-      setFadeClass("opacity-100");
-      setTimeout(() => {
-        setFadeClass("opacity-0");
-        setShowError(false);
-      }, 3000);
+    if (!checkContent()) {
       return;
     }
-
+    animateProgressBar()
     const result = await handleFileUpload();
-    const filenames = await result.files.map(
-      (file: { path: string }) => file.path,
-    );
-    setImagesPath((prevImages) => [...prevImages, ...filenames]);
-    const response = createPost({
-      location: location,
-      title: title,
-      description: description,
-      images: imagesPath,
-    });
 
-    if (result) {
-      console.log("Post content with images:", result);
-      setTitle(""); // Clear input after posting
-      setDescription("");
-      setImages([]); // Clear images after posting
-    } else if (!result) {
-      setTitle(""); // Clear input after posting
-      setDescription("");
-      setImages([]); // Clear images after posting
+    // Handle upload failure
+    if (!result || !result.files) {
+      console.log("File upload failed or no files returned. Posting without images");
+      await createPost({
+        location,
+        title,
+        description,
+        images: imagesPath,
+      })
+      reset();
+      return;
+    }else {
+      const filenames = result.files.map((file: { path: string }) => file.path);
+      setImagesPath((prevImages) => {
+        const updatedImages = [...prevImages, ...filenames];
+        console.log("Updated images path:", updatedImages);
+
+        createPost({
+          location,
+          title,
+          description,
+          images: updatedImages,
+        })
+            .then((response) => {
+              console.log("Post created successfully:", response);
+              reset();
+            })
+            .catch((error) => {
+              console.error("Error creating post:", error);
+            });
+        
+        return updatedImages; 
+      });
     }
+
   };
 
   return (

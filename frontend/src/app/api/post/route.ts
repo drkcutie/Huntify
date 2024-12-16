@@ -82,6 +82,11 @@ export async  function getAllPost(){
   }
   
   const res = await response.json();
+
+  const sortedPosts = res.sort((a: { postId: number }, b: { postId: number }) => {
+    return b.postId - a.postId;
+  });
+  
   console.log(res)
-  return res;
+  return sortedPosts;
 }

@@ -8,9 +8,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MapPin, Star, MessageCircle, Heart } from "lucide-react";
-import React, {useEffect, useState} from "react";
-import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious} from "@/components/ui/carousel";
-import {getNameUsingId} from "@/app/api/user/route";
+import React, { useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { getNameUsingId } from "@/app/api/user/route";
 
 interface PostProps {
   postId: number;
@@ -33,16 +39,8 @@ export function PostCard({
   images,
 }: PostProps) {
   const [isLiked, setIsLiked] = useState(true);
-  const [name, setName] = useState("");
-  useEffect(() => {
-    // Define the async function inside useEffect
-    const fetchUser = async () => {
-      const userName = await getNameUsingId(userId);
-      setName(userName);
-    };
-    fetchUser(); // Call the async function
-  }, [userId]); // Include userId as a dependency if it changes
-
+  const [name, setName] = useState("Derrick Binangbang");
+  const[avatar, setAvatar] = useState("");
 
   function handleLike() {
     setIsLiked(!isLiked);
@@ -53,7 +51,7 @@ export function PostCard({
       <CardHeader>
         <div className="flex items-center space-x-4">
           <Avatar>
-            <AvatarImage src="/placeholder.svg" />
+            <AvatarImage src={avatar}/>
             <AvatarFallback>{name}</AvatarFallback>
           </Avatar>
           <div>
@@ -65,20 +63,21 @@ export function PostCard({
       <CardContent>
         <p>{content}</p>
         <Carousel>
-          <CarouselContent key = {postId}>
+          <CarouselContent key={postId}>
             {images.length > 0 &&
-                images.map((image :any) => (
-                    <CarouselItem>
-                    <Image
-                        key={image.postImageId} // or another unique identifier from your image object
-                        src={"/uploads/post/" + image.imagePath } // You should replace with the correct path
-                        alt = {image.imagePath}
-                        width={600}
-                        height={600}
-                        className="mb-4 h-64 w-full rounded-md object-cover"
-                    />
-                    </CarouselItem>
-                ))}
+              images.map((image: any) => (
+                <CarouselItem key = {`carousel-item-${image.postImageId}`}>
+                  <Image
+                    key={image.postImageId} // or another unique identifier from your image object
+                    src={"/uploads/post/" + image.imagePath} // You should replace with the correct path
+                    alt={image.imagePath}
+                    width={600}
+                    height={600}
+                    priority
+                    className="mb-4 h-64 w-full rounded-md object-cover"
+                  />
+                </CarouselItem>
+              ))}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
