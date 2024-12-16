@@ -12,8 +12,8 @@ using backend.Models.User;
 namespace backend.Migrations
 {
     [DbContext(typeof(SeekrDbContext))]
-    [Migration("20241215155424_databaseforce")]
-    partial class databaseforce
+    [Migration("20241215225736_tryitout")]
+    partial class tryitout
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

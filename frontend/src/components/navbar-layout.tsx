@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { GalleryVerticalEnd, Menu, ShoppingCart, User } from "lucide-react";
-
+import { decode } from "@/app/api/route";
 import { ServiceCart } from "@/components/service-cart";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +34,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { deleteCookie } from "@/app/api/route";
 import { redirect } from "next/navigation";
 import { FaUsersViewfinder } from "react-icons/fa6";
-import {getEmail, getName, getUsername} from "@/app/api/user/route";
+import { getEmail, getName, getUsername } from "@/app/api/user/route";
 
 // This is sample data.
 const data = {
@@ -55,11 +55,11 @@ const data = {
     },
     {
       title: "Browse Services",
-      url: "#",
+      url: "/search",
       items: [
         {
-          title: "Upgrading",
-          url: "#",
+          title: "Search Services",
+          url: "/search",
         },
         {
           title: "Examples",
@@ -78,14 +78,17 @@ const data = {
       ],
     },
     {
-      title: "Category",
-      url: "/search",
+      title: "Work",
+      url: "#",
       items: [
         {
-         title: "Browse Category",
-          url :"/search"
-              
-        }
+          title: "Check Your Services",
+          url: "/services_page",
+        },
+        {
+          title: "Create A Service",
+          url: "/provider_page",
+        },
       ],
     },
   ],
@@ -133,47 +136,76 @@ export default function NavbarLayout({
 }
 
 function MainNav() {
+  const [role, setRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const decoded = await decode();
+        console.log("Data " + decoded);
+        if (!decoded) throw new Error("Invalid token");
+        setRole(decoded.role); // Assuming the role is stored in the decoded object
+      } catch (err) {
+        setError("Failed to load role");
+        console.log(err);
+      } finally {
+        setLoading(false); // Stop loading once the fetch is done
+      }
+    };
+    fetchRole();
+  }, []);
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
-        {data.navMain.map((item) => (
-          <NavigationMenuItem key={item.title}>
-            <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {item.items.map((subItem) => (
-                  <li key={subItem.title}>
-                    <NavigationMenuLink asChild>
-                      <a
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        href={subItem.url}
-                      >
-                        <div className="text-sm font-medium leading-none">
-                          {subItem.title}
-                        </div>
-                      </a>
-                    </NavigationMenuLink>
-                  </li>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        ))}
+        {data.navMain
+          .filter((item) => {
+            if (item.title === "Work" && role !== "ServiceProvider") {
+              return false;
+            }
+            return true;
+          })
+          .map((item) => (
+            <NavigationMenuItem key={item.title}>
+              <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  {item.items.map((subItem) => (
+                    <li key={subItem.title}>
+                      <NavigationMenuLink asChild>
+                        <a
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          href={subItem.url}
+                        >
+                          <div className="text-sm font-medium leading-none">
+                            {subItem.title}
+                          </div>
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          ))}
       </NavigationMenuList>
     </NavigationMenu>
   );
 }
 
 function UserMenu() {
-
   const [name, setName] = useState<string | null>(null);
-  const [email , setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchName = async () => {
       try {
-        const   fetchedFullName = await getName(); // Assume this returns a string or null
+        const decoded = await decode();
+        console.log("Data " + decoded);
+        if (!decoded) throw new Error("Invalid token");
+        const fetchedFullName = await getName(); // Assume this returns a string or null
         setName(fetchedFullName); // Directly store the string (or null)
       } catch (err) {
         setError("Failed to load full name");
@@ -182,27 +214,27 @@ function UserMenu() {
         setLoading(false); // Stop loading once the fetch is done
       }
     };
-    const  fetchEmail = async () => {
+    const fetchEmail = async () => {
       try {
-        const fetchEmail = await getEmail(); 
-        setEmail(fetchEmail); 
+        const fetchEmail = await getEmail();
+        setEmail(fetchEmail);
       } catch (err) {
         setError("Failed to load email");
         console.log(err);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
     fetchEmail();
     fetchName();
   }, []); //
   function handleLogout() {
-    deleteCookie()
-    redirect('auth/login')
+    deleteCookie();
+    redirect("auth/login");
   }
 
-  function handleProfile(){
-    redirect('profile');
+  function handleProfile() {
+    redirect("profile");
   }
 
   function handleSetting() {
