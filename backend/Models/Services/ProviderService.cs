@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using backend.Models.User;
+using Newtonsoft.Json;
 
 namespace backend.Models.Services;
 
@@ -10,6 +11,7 @@ public class ProviderService
 
     public int ServiceProviderId { get; set; }
 
+    [JsonIgnore]
     public ServiceProviderModel? ServiceProvider { get; set; } = null!;
 
 
