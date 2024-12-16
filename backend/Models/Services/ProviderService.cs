@@ -16,6 +16,7 @@ public class ProviderService
 
 
     public int ServiceId { get; set; }
+    [JsonIgnore]
     public Service.Service Service { get; set; } = null!;
 
 

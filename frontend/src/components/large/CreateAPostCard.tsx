@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, {useState, useCallback, useRef, useContext} from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,7 @@ export default function CreateAPostCard() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
+  const feed = useContext('FeedContext');
 
   // Ref for file input
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -29,10 +29,7 @@ namespace backend.Repositories
 
         public async Task<IEnumerable<ProviderService>> GetByServiceProviderIdAsync(int serviceProviderId)
         {
-            return await _context.ProviderServices
-                .Include(ps => ps.Service)
-                .Where(ps => ps.ServiceProviderId == serviceProviderId)
-                .ToListAsync();
+            return await _context.ProviderServices.Where(ps => ps.ServiceProviderId == serviceProviderId).ToListAsync();
         }
 
         public async Task AddAsync(ProviderService providerService)
