@@ -24,7 +24,7 @@ export default function ServicesPage() {
   const renderServiceDetails = (service: any) => {
     const { rateType, experience } = getRateTypeAndExperience(
       service.rateType,
-      service.experience,
+      service.yearsOfExperience,
     );
     return (
       <>
@@ -89,26 +89,34 @@ export default function ServicesPage() {
 
           {providerServices.length > 0 && (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {providerServices.map((providerService: any) => (
-                <div
-                  key={providerService.providerServiceId}
-                  className="rounded-lg border p-4 shadow transition-shadow hover:shadow-md"
-                >
-                  <h2 className="text-lg font-bold">
-                    {service
-                      .find(
-                        (s: Service) =>
-                          s.serviceId === providerService.serviceId,
-                      )
-                      .title.toUpperCase()}
-                  </h2>
-                  <p>{providerService.description}</p>
-                  {renderServiceDetails(providerService)}
-                  <Link href="/feed">
-                    <Button>Post</Button>
-                  </Link>
-                </div>
-              ))}
+              {providerServices.map((providerService: any) => {
+                console.log(
+                  "Da experience aight:" + providerService.yearsOfExperience,
+                );
+                console.log(
+                  "also this its ratetype: " + providerService.rateType,
+                );
+                return (
+                  <div
+                    key={providerService.providerServiceId}
+                    className="rounded-lg border p-4 shadow transition-shadow hover:shadow-md"
+                  >
+                    <h2 className="text-lg font-bold">
+                      {service
+                        .find(
+                          (s: Service) =>
+                            s.serviceId === providerService.serviceId,
+                        )
+                        .title.toUpperCase()}
+                    </h2>
+                    <p>{providerService.description}</p>
+                    {renderServiceDetails(providerService)}
+                    <Button asChild>
+                      <Link href="/feed">Post</Link>
+                    </Button>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

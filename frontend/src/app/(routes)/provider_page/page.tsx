@@ -6,7 +6,9 @@ import NavbarLayout from "@/components/navbar-layout";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Textarea } from "@/components/ui/textarea";
+import { AlertCircle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -22,7 +24,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Clock } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -58,9 +59,26 @@ export default function ProviderPage() {
   const [rateType, setRateType] = React.useState("hourly");
   const [description, setDescription] = React.useState("");
   const [experience, setExperience] = React.useState("");
+  const [showError, setShowError] = React.useState(false);
+  const [fadeClass, setFadeClass] = React.useState("opacity-0"); // Controls opacity for fade-in and fade-out
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (
+      !selectedService ||
+      !rate ||
+      !description ||
+      experience == "Select Experience Duration"
+    ) {
+      setShowError(true);
+      setFadeClass("opacity-100");
+      setTimeout(() => {
+        setFadeClass("opacity-0");
+        setShowError(false);
+      }, 3000);
+
+      return; // Stop submission if any field is empty
+    }
     try {
       const decoded = await decode();
       if (!decoded) {
@@ -78,7 +96,7 @@ export default function ProviderPage() {
         serviceProviderId: decoded.id,
         serviceId: selectedServiceData.serviceId,
         rate: parseFloat(rate),
-        rateType: rateType === "hourly" ? 1 : 0,
+        rateType: rateType === "hourly" ? 0 : 1,
         description: description,
         yearsOfExperience: experience,
       });
@@ -135,6 +153,20 @@ export default function ProviderPage() {
           <p className="text-red-500">Error: {error}</p>
         ) : services.length > 0 ? (
           <div className="container mx-auto my-14 max-w-3xl p-4">
+            {showError && (
+              <div className="fixed left-1/2 top-20 z-50 w-11/12 max-w-md -translate-x-1/2 transform">
+                <Alert
+                  variant="destructive"
+                  className={`transition-opacity duration-500 ease-in-out ${fadeClass}`}
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle className="text-2xl">Cannot Submit!</AlertTitle>
+                  <AlertDescription>
+                    You need to fill out all the fields to submit.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
             <Card>
               <CardHeader>
                 <CardTitle className="text-center text-3xl font-bold">
@@ -273,12 +305,13 @@ export default function ProviderPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <h3 className="mb-2 text-2xl font-bold">Your Service</h3>
-                {selectedService && (
-                  <Badge variant="secondary" className="mb-4">
-                    {services.find((s) => s.title === selectedService)?.title}
-                  </Badge>
-                )}
+                <h3 className="mb-2 text-2xl font-bold">
+                  {selectedService
+                    ? services
+                        .find((s) => s.title === selectedService)
+                        ?.title.toUpperCase()
+                    : "Your Service"}
+                </h3>
                 <p className="mb-4">
                   {description || "No description provided."}
                 </p>
