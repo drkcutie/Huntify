@@ -42,30 +42,7 @@ export default function ServicesPage() {
         console.log("Data " + decoded);
         if (!decoded) throw new Error("Invalid token");
 
-        setServiceProviderId(decoded.id);
-        console.log("THE SP ID IS " + serviceProviderId);
-        const [ProviderServiceResponse, servicesResponse] = await Promise.all([
-          fetch(`http://localhost:5000/api/ProviderService`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }),
-          fetch("http://localhost:5000/api/Service", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }),
-        ]);
-
-        if (!ProviderServiceResponse.ok && !servicesResponse.ok) {
-          throw new Error(
-            `Failed to fetch: ${ProviderServiceResponse.statusText} or ${servicesResponse.statusText}`,
-          );
-        }
-
-        const ProviderService = await ProviderServiceResponse.json();
-        const ServiceData = await servicesResponse.json();
-        setProviderServices(ProviderService);
-        setService(ServiceData);
-        setLoading(false);
+        setServiceProviderId(decoded.roleId);
       } catch (err: any) {
         setError(err.message || "An error occurred while fetching data");
         setLoading(false);
@@ -73,6 +50,46 @@ export default function ServicesPage() {
     };
 
     fetchData();
+  }, []);
+  React.useEffect(() => {
+    if (serviceProviderId !== 1) {
+      const fetchProviderServices = async () => {
+        try {
+          const [ProviderServiceResponse, servicesResponse] = await Promise.all(
+            [
+              fetch(
+                `http://localhost:5000/api/ProviderService/getProviderServiceID/${serviceProviderId}`,
+                {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                },
+              ),
+              fetch("http://localhost:5000/api/Service", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              }),
+            ],
+          );
+
+          if (!ProviderServiceResponse.ok && !servicesResponse.ok) {
+            throw new Error(
+              `Failed to fetch: ${ProviderServiceResponse.statusText} or ${servicesResponse.statusText}`,
+            );
+          }
+
+          const ProviderService = await ProviderServiceResponse.json();
+          const ServiceData = await servicesResponse.json();
+          setProviderServices(ProviderService);
+          setService(ServiceData);
+          setLoading(false);
+        } catch (err: any) {
+          setError(err.message || "An error occurred while fetching data");
+          setLoading(false);
+        }
+      };
+
+      fetchProviderServices();
+    }
   }, [serviceProviderId]);
 
   return (
@@ -82,7 +99,7 @@ export default function ServicesPage() {
           <h1 className="mb-4 text-2xl font-bold">Your Services</h1>
 
           {loading && <p>Loading...</p>}
-          {error && <p className="text-red-500">Error: {error}</p>}
+          {error && <p className="text-red-500">No Servcies To Show</p>}
           {providerServices.length === 0 && <p>No services available.</p>}
 
           {providerServices.length > 0 && (

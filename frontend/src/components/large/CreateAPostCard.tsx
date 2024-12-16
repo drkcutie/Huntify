@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,17 @@ import { Progress } from "@/components/ui/progress";
 import { IoCameraOutline, IoLocationOutline } from "react-icons/io5";
 import { AiOutlineFileImage } from "react-icons/ai";
 import { createPost } from "@/app/api/post/route";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { decode } from "@/app/api/route";
 
 // Types for better type safety
 interface PostData {
@@ -31,13 +42,7 @@ interface FileUploadResult {
   error?: string;
 }
 
-interface CreateAPostCardProps {
-  onPostCreated?: any;
-}
-
-export default function CreateAPostCard({
-  onPostCreated,
-}: CreateAPostCardProps) {
+export default function CreateAPostCard() {
   // State hooks with explicit typing
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -47,9 +52,71 @@ export default function CreateAPostCard({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
+  const [serviceProviderId, setServiceProviderId] = React.useState(1); // Replace with the actual ServiceProviderId of the current user
+  const [loading, setLoading] = React.useState(true);
+  const [providerServices, setProviderServices] = React.useState([]);
+  const [service, setService] = React.useState([]);
 
   // Ref for file input
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const decoded = await decode();
+        console.log("Data " + decoded);
+        if (!decoded) throw new Error("Invalid token");
+
+        setServiceProviderId(decoded.roleId);
+      } catch (err: any) {
+        setError(err.message || "An error occurred while fetching data");
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (serviceProviderId !== 1) {
+      const fetchProviderServices = async () => {
+        try {
+          const [ProviderServiceResponse, servicesResponse] = await Promise.all(
+            [
+              fetch(
+                `http://localhost:5000/api/ProviderService/getProviderServiceID/${serviceProviderId}`,
+                {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                },
+              ),
+              fetch("http://localhost:5000/api/Service", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              }),
+            ],
+          );
+
+          if (!ProviderServiceResponse.ok && !servicesResponse.ok) {
+            throw new Error(
+              `Failed to fetch: ${ProviderServiceResponse.statusText} or ${servicesResponse.statusText}`,
+            );
+          }
+
+          const ProviderService = await ProviderServiceResponse.json();
+          const ServiceData = await servicesResponse.json();
+          setProviderServices(ProviderService);
+          setService(ServiceData);
+          setLoading(false);
+        } catch (err: any) {
+          setError(err.message || "An error occurred while fetching data");
+          setLoading(false);
+        }
+      };
+
+      fetchProviderServices();
+    }
+  }, [serviceProviderId]);
 
   // Reset form function
   const resetForm = useCallback(() => {
@@ -158,7 +225,7 @@ export default function CreateAPostCard({
 
       // Create post (assuming createPost is imported from your API route)
       await createPost(postData);
-      onPostCreated();
+
       // Reset form after successful post
       resetForm();
       setProgress(0);
@@ -198,6 +265,51 @@ export default function CreateAPostCard({
           accept="image/*"
           onChange={handleFileInputChange}
         />
+
+        <section className="flex flex-col gap-2">
+          <p>Advertise Your Service</p>
+          {loading ? (
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[50px] w-full rounded-xl" />
+            </div>
+          ) : providerServices.length > 0 ? (
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose The Service To Post" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel className="text-xl">Your Services</SelectLabel>
+                  {providerServices.map((providerService) => {
+                    const serviceData = service.find(
+                      (s) => s.serviceId === providerService.serviceId,
+                    );
+                    return (
+                      <SelectItem
+                        className="text-lg"
+                        key={providerService.providerServiceId}
+                        value={providerService.serviceId}
+                      >
+                        {serviceData
+                          ? serviceData.title.toUpperCase()
+                          : "Service not found"}
+                        <div className="ml-5 text-sm font-light">
+                          Rate: ${providerService.rate}{" "}
+                          {providerService.rateType === 0
+                            ? "Per Hour"
+                            : "Per Order"}
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          ) : (
+            <h3>No Services To Post</h3>
+          )}
+        </section>
 
         <section className="flex flex-col gap-2">
           <p>Title</p>
