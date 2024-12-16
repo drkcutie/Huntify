@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using backend.Models.Posts;
 using backend.Models.User;
 using Newtonsoft.Json;
 
@@ -27,6 +28,8 @@ public class ProviderService
     public string Description { get; set; } = null!;
 
     public Experience YearsOfExperience { get; set; }
+
+    public Post Post { get; set; } = null!;
 }
 
 public class PostProviderServiceDto

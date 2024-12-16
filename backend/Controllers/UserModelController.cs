@@ -43,8 +43,8 @@ namespace backend.Controllers
 
         private async Task<ActionResult<string>> GenerateJwtToken(string username, int userId)
         {
-            var role = "";
-            var roleId = 0;
+            string role ;
+            int roleId ;
             
             var user = await _context.Users.Include(userModel => userModel.Client)
                 .Include(userModel => userModel.ServiceProvider).FirstOrDefaultAsync(u => u.Id == userId);
@@ -130,13 +130,6 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserModel>> Login([FromBody] LoginDTO userModel)
         {
-            //Administrator access
-            string? token;
-            // if (userModel is { Username: "admin123", Password: "admin123" })
-            // {
-            //     token = GenerateJwtToken("admin123");
-            //     return Ok(new { token });
-            // }
 
             if (string.IsNullOrEmpty(userModel.Username) || string.IsNullOrEmpty(userModel.Password))
             {
@@ -263,7 +256,7 @@ namespace backend.Controllers
             };
             //Hash Password
             var passwordHasher = new PasswordHasher<UserModel>();
-            userModel.Password = passwordHasher.HashPassword(userModel, registerDto.Password!);
+            userModel.Password = passwordHasher.HashPassword(userModel, registerDto.Password);
             RegisterClientOrServiceProvider(registerDto, userModel);
 
             _context.Users.Add(userModel);
@@ -273,7 +266,7 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, "An error occurred while registering user");
+                return StatusCode(500, "An error occurred while registering user: "  + e);
             }
 
             return Ok(new { Message = "User registered successfully " });

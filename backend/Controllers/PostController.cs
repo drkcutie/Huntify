@@ -91,6 +91,7 @@ namespace backend.Controllers
         {
             var post = new Post()
             {
+                ProviderServiceId = postDto.ProviderServiceId,
                 UserId = postDto.UserId,
                 Title = postDto.Title,
                 Description = postDto.Description
