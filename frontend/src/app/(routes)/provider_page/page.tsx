@@ -26,8 +26,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Clock } from "lucide-react";
-import { redirect } from "next/navigation";
-
 interface Service {
   serviceId: number;
   serviceType: string;
@@ -102,7 +100,6 @@ export default function ProviderPage() {
         yearsOfExperience: experience,
       });
       console.log("Service posted successfully: " + result);
-      redirect("/services_page");
     } catch (error: any) {
       console.error(
         "Service posting failed: ",
