@@ -27,11 +27,17 @@ interface Post {
 export default function FeedPage() {
     //TODO: Implement the FeedPage component, Fetch ID and POst
     const [posts, setPosts] = useState([])
+    const [providerService, setProviderService] = useState([])
     useEffect(() => {
         const fetchPost = async () => {
             const fetchedPosts = await getAllPost();
             setPosts(fetchedPosts);
         }
+        const  fetchProviderService = async () => {
+            setProviderService(providerService);
+        }
+
+        fetchProviderService();
         fetchPost()
     }, []);
     return (
