@@ -1,6 +1,7 @@
 using System.Text;
 using backend.Models;
 using backend.Models.User;
+using backend.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +22,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<IProviderServiceRepository, ProviderServiceRepository>();
 // Configure DbContext for PostgreSQL
 builder.Services.AddDbContext<SeekrDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
