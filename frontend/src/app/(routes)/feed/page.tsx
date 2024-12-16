@@ -1,12 +1,13 @@
 'use client';
 import Navbar from "@/components/large/NavBar";
 import Footer from "@/components/large/Footer";
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import CreateAPostCard from "@/components/large/CreateAPostCard";
 import NavbarLayout from "@/components/navbar-layout";
 import {PostCard} from "@/components/large/PostCard";
 import CameraPopup from "@/components/large/CameraPopup";
 import {getAllPost} from "@/app/api/post/route";
+import {MdDashboardCustomize} from "react-icons/md";
 
 interface PostImage {
     postImageId: number;
@@ -24,10 +25,13 @@ interface Post {
     postLikes: any[];
     postImages: PostImage[];
 }
+
+export const FeedContext = createContext('FeedContext');
 export default function FeedPage() {
     //TODO: Implement the FeedPage component, Fetch ID and POst
     const [posts, setPosts] = useState([])
     const [providerService, setProviderService] = useState([])
+    const [feed, setFeed] = useState(0)
     useEffect(() => {
         const fetchPost = async () => {
             const fetchedPosts = await getAllPost();
@@ -39,7 +43,9 @@ export default function FeedPage() {
 
         fetchProviderService();
         fetchPost()
-    }, []);
+    }, [feed]);
+    
+    
     return (
         <>
             <NavbarLayout>
@@ -50,7 +56,9 @@ export default function FeedPage() {
                     <section className="mb12 w-3/4">
                         <h2 className="text-xl font-semibold mb-4">Create a Post</h2>
                         <div className="bg-white shadow-md rounded-lg p-5">
-                            <CreateAPostCard />
+                            <FeedContext.Provider value = {feed}>
+                                <CreateAPostCard  />
+                            </FeedContext.Provider>
                         </div>
                     </section>
 
