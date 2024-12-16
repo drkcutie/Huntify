@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import NavbarLayout from "@/components/navbar-layout";
+import { getlevenshteinDistance } from "@/lib/functions";
 
 // Define the Skill interface based on your backend model
 interface Service {
@@ -53,7 +54,7 @@ export default function SearchPage() {
     ProviderService[]
   >([]);
   const [users, setUsers] = React.useState<User[]>([]);
-  // const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [activeTab, setActiveTab] = React.useState("recommendations");
@@ -127,6 +128,38 @@ export default function SearchPage() {
     fetchData();
   }, []);
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log("handleKeyPress called");
+    if (event.key === "Enter") {
+      let closestMatch = null;
+      let minDistance = Infinity;
+      services.forEach((service) => {
+        const distance = getlevenshteinDistance(
+          searchQuery,
+          service.title.toLowerCase(),
+        );
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestMatch = service;
+        }
+      });
+      console.log("Closest match: " + closestMatch.title);
+      console.log("Distance: " + minDistance);
+      if (closestMatch) {
+        if (minDistance >= 8) {
+          setActiveTab("recommendations");
+          setSearchQuery("");
+        } else {
+          setActiveTab(closestMatch.title);
+          setSearchQuery(closestMatch.title.toLowerCase());
+        }
+      }
+    }
+  };
   const groupedServices = services.reduce((acc, service) => {
     if (!acc[service.serviceType]) {
       acc[service.serviceType] = [];
@@ -155,7 +188,11 @@ export default function SearchPage() {
               </svg>
             </div>
             <input
+              id="searchBar"
               type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              onKeyPress={handleKeyPress}
               className="w-full bg-transparent px-4 text-[20px] font-normal text-white outline-none"
             />
           </div>

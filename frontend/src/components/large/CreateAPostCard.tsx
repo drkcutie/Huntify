@@ -116,9 +116,13 @@ export default function CreateAPostCard() {
     }
 
     const result = await handleFileUpload();
-    const filenames = await result.files.map(
-      (file: { path: string }) => file.path,
-    );
+    let filenames: string[];
+    if (result) {
+      let filenames = await result.files.map(
+        (file: { path: string }) => file.path,
+      );
+    }
+
     setImagesPath((prevImages) => [...prevImages, ...filenames]);
     const response = createPost({
       location: location,
