@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Models.Services;
 using backend.Models.User;
 using backend.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace backend.Controllers
 {
@@ -13,10 +14,12 @@ namespace backend.Controllers
     public class ProviderServiceController : ControllerBase
     {
         private readonly IProviderServiceRepository _repository;
+        private readonly ILogger<ProviderServiceController> _logger;
 
-        public ProviderServiceController(IProviderServiceRepository repository)
+        public ProviderServiceController(IProviderServiceRepository repository, ILogger<ProviderServiceController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         // GET: api/ProviderService
@@ -35,26 +38,27 @@ namespace backend.Controllers
             }
         }
 
-        [HttpGet("getProviderServiceID")]
-        public async Task<ActionResult<List<ProviderService>>> GetProviderServicesByServiceProviderId([FromQuery] int serviceProviderId)
+    [HttpGet("getProviderServiceID/{serviceProviderId}")]
+    public async Task<ActionResult<List<ProviderService>>> GetProviderServicesByServiceProviderId(int serviceProviderId)
+    {
+        try
         {
-            try 
-            {
-                var providerServices = await _repository.GetByServiceProviderIdAsync(serviceProviderId);
-                
-                if (providerServices == null || !providerServices.Any())
-                {
-                    return NotFound($"No provider services found for service provider ID {serviceProviderId}");
-                }
+            var providerServices = await _repository.GetByServiceProviderIdAsync(serviceProviderId);
 
-                return Ok(providerServices);
-            }
-            catch (Exception ex)
+            if (providerServices == null ||!providerServices.Any())
             {
-                // Log the exception
-                return StatusCode(500, $"An error occurred while retrieving provider services for service provider ID {serviceProviderId}.");
+                return NotFound($"No provider services found for service provider ID {serviceProviderId}");
             }
-        }
+
+        return Ok(providerServices);
+    }
+    catch (Exception ex)
+    {
+        // Log the exception
+        _logger.LogError(ex, "Error retrieving provider services for service provider {serviceProviderId}", serviceProviderId);
+        return StatusCode(500, "An error occurred while retrieving provider services.");
+    }
+}
 
         // GET: api/ProviderService/5
         [HttpGet("{id}")]

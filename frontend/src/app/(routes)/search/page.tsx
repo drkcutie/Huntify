@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Navbar from "@/components/large/NavBar";
 import Footer from "@/components/large/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";

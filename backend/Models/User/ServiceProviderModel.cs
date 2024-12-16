@@ -4,7 +4,7 @@ using backend.Models.Skills_and_Reviews;
 using backend.Models.Service;
 using backend.Models.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace backend.Models.User
 {
@@ -29,11 +29,8 @@ namespace backend.Models.User
         // Navigation properties for related entities
         public ICollection<Review>? Reviews { get; set; } = new List<Review>();
         public ICollection<Service.Service>? Services { get; set; } = new List<Service.Service>();
-        
         public ICollection<ServiceProviderSkill>? ServiceProviderSkills { get; set; } = new List<ServiceProviderSkill>();
         
-        
-    
         public ICollection<ProviderService>? ProviderServices { get; set; } = new List<ProviderService>();
     }
     public class RegisterServiceProviderDto
