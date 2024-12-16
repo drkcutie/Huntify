@@ -15,7 +15,7 @@ export default function Footer() {
             </div>
             <div className="w-full border-2 p-10 flex flex-row items-center justify-between pr-20 pl-20">
                 <div>
-                    <p className='text-3xl text-black font-bold'>Huntify</p>
+                    <p className='text-3xl text-black font-bold'>Seekr</p>
                     <p className='text-m text-gray-600'>Simplify your search, make informed decisions ,<br/> and get the
                         services you need with just a few clicks.</p>
                 </div>

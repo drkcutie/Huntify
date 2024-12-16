@@ -69,7 +69,7 @@ export default function RegisterPage() {
         <>
             <div className="flex w-full h-screen justify-center items-center font-mont">
                 <div id="left" className="flex flex-col w-1/2 p-2 gap-2 justify-center items-center">
-                    <h1 className="font-mont font-bold text-3xl">Welcome to Huntify!</h1>
+                    <h1 className="font-mont font-bold text-3xl">Welcome to Seekr!</h1>
                     <p className="text-lg mb-5">Expert Services at Your Fingertips</p>
                     <div className="max-h-[70vh] overflow-auto w-full">
                         <Form {...form}>

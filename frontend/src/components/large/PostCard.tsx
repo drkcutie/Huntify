@@ -8,7 +8,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, MessageCircle, Heart } from "lucide-react";
+import {MapPin, Star, MessageCircle, Heart, AlertCircle} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import {
   Carousel,
@@ -27,6 +27,7 @@ import { FaBookmark, FaCartPlus, FaRegBookmark, FaStar } from "react-icons/fa";
 import { CiBookmark, CiLocationOn } from "react-icons/ci";
 import { MdOutbond, MdOutlineShoppingCart } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 
 interface PostProps {
   postId: number;
@@ -57,6 +58,9 @@ export function PostCard({
   const [serviceProviders, setServiceProviders] = useState([]);
   const [providerService, setProviderService] = useState([]);
   const [serviceName, setServiceName] = useState("");
+  const [showError, setShowError] = React.useState(false);
+  const [fadeClass, setFadeClass] = React.useState("opacity-0"); // Controls opacity for fade-in and fade-out
+
 
   function handleLike() {
     setIsLiked(!isLiked);
@@ -89,11 +93,29 @@ export function PostCard({
   }, [providerServiceId]);
 
   function handleService() {
-    //TODO FETCH PROVIDERSERVICE ID OR SOMETHING
+    setShowError(true);
+    setFadeClass("opacity-100");
+    setTimeout(() => {
+      setFadeClass("opacity-0");
+      setShowError(false);
+    }, 3000);
   }
 
   return (
+      
     <Card key={postId}>
+      {showError && (
+          <div className="fixed left-1/2 top-20 z-50 w-11/12 max-w-md -translate-x-1/2 transform">
+            <Alert
+                className={`transition-opacity duration-500 ease-in-out ${fadeClass}`}
+            >
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="text-2xl">"Booked"</AlertTitle>
+              <AlertDescription>
+                Successfully added to cart
+              </AlertDescription>
+            </Alert>
+          </div>)}
       <CardHeader>
         <div className="flex items-center space-x-4">
           <Avatar>
