@@ -26,8 +26,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Clock } from "lucide-react";
-import { redirect } from "next/navigation";
-
 interface Service {
   serviceId: number;
   serviceType: string;
