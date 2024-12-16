@@ -17,6 +17,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { getNameUsingId } from "@/app/api/user/route";
+import { FaBookmark, FaCartPlus, FaRegBookmark, FaStar } from "react-icons/fa";
+import { CiBookmark, CiLocationOn } from "react-icons/ci";
+import { MdOutbond, MdOutlineShoppingCart } from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
 
 interface PostProps {
   postId: number;
@@ -38,12 +42,17 @@ export function PostCard({
   rating,
   images,
 }: PostProps) {
-  const [isLiked, setIsLiked] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
   const [name, setName] = useState("Derrick Binangbang");
-  const[avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   function handleLike() {
     setIsLiked(!isLiked);
+  }
+
+  function handleService() {
+   //TODO FETCH PROVIDERSERVICE ID OR SOMETHING 
+    
   }
 
   return (
@@ -51,7 +60,7 @@ export function PostCard({
       <CardHeader>
         <div className="flex items-center space-x-4">
           <Avatar>
-            <AvatarImage src={avatar}/>
+            <AvatarImage src={avatar} />
             <AvatarFallback>{name}</AvatarFallback>
           </Avatar>
           <div>
@@ -60,52 +69,61 @@ export function PostCard({
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <p>{content}</p>
-        <Carousel>
-          <CarouselContent key={postId}>
-            {images.length > 0 &&
-              images.map((image: any) => (
-                <CarouselItem key = {`carousel-item-${image.postImageId}`}>
-                  <Image
-                    key={image.postImageId} // or another unique identifier from your image object
-                    src={"/uploads/post/" + image.imagePath} // You should replace with the correct path
-                    alt={image.imagePath}
-                    width={600}
-                    height={600}
-                    priority
-                    className="mb-4 h-64 w-full rounded-md object-cover"
-                  />
-                </CarouselItem>
-              ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-        <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-          <MapPin className="mr-1 h-7 w-7" />
-          <span>{location}</span>
-        </div>
-        <div className="mt-2 flex items-center gap-2">
-          <Star className="mr-1 h-7 w-7 text-yellow-400" />
-          <span>{rating.toFixed(1)}</span>
+      <CardContent className='w-full p-0 '>
+        <p className="mb-5 ml-5">{content}</p>
+        {images.length > 0 && (
+          <Carousel className="w-full h-full bg-black">
+            <CarouselContent  key={postId}>
+              {images.length > 0 &&
+                images.map((image: any) => (
+                  <CarouselItem className="w-full h-full" key={`carousel-item-${image.postImageId}`}>
+                    <Image
+                      key={image.postImageId} // or another unique identifier from your image object
+                      src={"/uploads/post/" + image.imagePath} // You should replace with the correct path
+                      alt={image.imagePath}
+                      width={1080}
+                      height={1080}
+                      priority
+                      className="w-full rounded-md object-cover"
+                    />
+                  </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious className="ml-14 opacity-70" />
+            <CarouselNext className="mr-14 opacity-70" />
+          </Carousel>
+        )}
+        <div className="flex w-full flex-row gap-5 p-2">
+          <div className="flex w-1/3 cursor-pointer items-center justify-center gap-5 rounded-2xl p-5 font-bold shadow transition-all duration-300 hover:scale-105">
+            <FaStar />
+            <p className="font-normal">{rating}</p>
+          </div>
+          <div className="flex w-2/3 cursor-pointer items-center justify-center gap-4 rounded-2xl p-5 font-bold shadow transition-all duration-300 hover:scale-105">
+            <FaLocationDot />
+            <p className="font-normal">{location}</p>
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="ghost" size="sm" onClick={handleLike}>
+      <CardFooter className="flex flex-col justify-start items-start gap-2">
+        <div className="flex justify-start space-x-4">
           <Heart
-            className={
-              isLiked
-                ? "mr-2 h-5 w-5 animate-bounce text-red-500 hover:scale-105"
-                : "hover:scale:105 mr-2 h-4 w-4"
-            }
+              className={`h-7 w-7 cursor-pointer ${
+                  isLiked
+                      ? "text-red-500"
+                      : "transition-all duration-300 hover:scale-110"
+              }`}
+              onClick={handleLike}
           />
-          Like
-        </Button>
-        <Button variant="ghost" size="sm">
-          <MessageCircle className="mr-2 h-4 w-4 hover:animate-in" />
-          Comment
-        </Button>
+          <MdOutlineShoppingCart
+              className="h-7 w-7 cursor-pointer transition-all duration-300 hover:scale-110"
+              onClick={handleService}
+          />
+          <MessageCircle className="h-7 w-7 cursor-pointer transition-all duration-300 hover:scale-110" />
+        </div>
+        <div className='flex flex-row  gap-1'>
+          <p className='text-sm'> {10}</p>
+          <p className='text-sm'>likes</p>
+        </div>
       </CardFooter>
     </Card>
   );

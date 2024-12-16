@@ -55,7 +55,7 @@ export default function FeedPage() {
                     </section>
 
                     <section className="w-3/4 my-5 shadow min-h-[500px] flex flex-col justify-center items-center">
-                        <div className="flex flex-col gap-6 w-full">
+                        <div className="flex flex-col gap-6 w-2/3 ">
                             {posts.length > 0 ? (
                                 posts.map((post: Post) => (
                                     <PostCard
@@ -80,7 +80,6 @@ export default function FeedPage() {
 
                 </main>
             </NavbarLayout>
-            <Footer/>
         </>
     );
 }
