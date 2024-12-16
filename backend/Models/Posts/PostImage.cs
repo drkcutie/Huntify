@@ -11,7 +11,6 @@ public class PostImage
     [ForeignKey("Post")]
     public int  PostId { get; set; }
     
-    
     public int PostImageOrder { get; set; }
     public string ImagePath { get; set; } = null!;
     

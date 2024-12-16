@@ -98,6 +98,7 @@ export default function ProviderPage() {
         description: description,
         yearsOfExperience: experience,
       });
+      
       console.log("Service posted successfully: " + result);
     } catch (error: any) {
       console.error(

@@ -48,8 +48,8 @@ const data = {
           url: "/feed",
         },
         {
-          title: "Project Structure",
-          url: "#",
+          title: "Profile",
+          url: "/profile",
         },
       ],
     },
@@ -63,16 +63,6 @@ const data = {
         },
         {
           title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "How it works",
-      url: "#",
-      items: [
-        {
-          title: "Components",
           url: "#",
         },
       ],

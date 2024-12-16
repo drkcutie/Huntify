@@ -1,11 +1,12 @@
-'use client'
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import NavbarLayout from "@/components/navbar-layout";
 import Footer from "@/components/large/Footer";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Link from "next/link";
+import {getName} from "@/app/api/user/route";
 
 interface UserProfile {
   name: string;
@@ -18,48 +19,72 @@ interface UserProfile {
   profilePicture: string;
 }
 
-const dummyUser: UserProfile = {
-  name: "Jane Doe",
-  username: "@janedoe",
-  bio: "Passionate developer | Open source enthusiast | Coffee lover",
-  location: "San Francisco, CA",
-  website: "https://janedoe.dev",
-  joinDate: "Joined September 2021",
-  coverPhoto: "/placeholder.svg?height=300&width=1000",
-  profilePicture: "/placeholder.svg?height=150&width=150",
-};
-export default function ProfilePage({
-  user = dummyUser,
-}: {
-  user?: UserProfile;
-}) {
+
+export default function ProfilePage() {
+  const [name, setName] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const dummyUser: UserProfile = {
+    name: "",
+    username: "@name",
+    bio: "",
+    location: "San Francisco, CA",
+    website: "https://empty.com",
+    joinDate: "Joined  December 2024",
+    coverPhoto: "/placeholder.svg?height=300&width=1000",
+    profilePicture: "/placeholder.svg?height=150&width=150",
+  };
+  useEffect(() => {
+    const fetchName = async () => {
+      try {
+        const response = await getName();
+        setName(response);
+      } catch (error) {
+        console.error('Error fetching name:', error);
+      }
+    };
+
+    const fetchUsername = async () => {
+      try {
+        const response = await getName();
+        setUsername(response);
+      } catch (error) {
+        console.error('Error fetching name:', error);
+      }
+    };
+    
+    fetchUsername();
+    fetchName(); // Call the async function
+  }, []);
+  
   return (
     <>
       <NavbarLayout>
         <div className="mx-auto w-full max-w-7xl">
           <div className="relative">
             <img
-              src={user.coverPhoto}
+              src=""
               alt=""
               className="h-72 w-full rounded-t-lg border-2 object-cover shadow"
             />
             <Avatar className="border-1 absolute bottom-0 left-20 h-32 w-32 translate-y-1/2 transform border-white shadow-lg">
-              <AvatarImage src={user.profilePicture} alt={user.name} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={""} alt={name} />
+              <AvatarFallback>{""}</AvatarFallback>
             </Avatar>
           </div>
           <Card className="mt-20 self-center rounded-t-none">
             <CardContent className="pt-6">
               <div className="mb-4 flex items-start justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold">{user.name}</h1>
-                  <p className="text-gray-500">{user.username}</p>
+                  <h1 className="text-2xl font-bold">{name}</h1>
+                  <p className="text-gray-500">{username}</p>
                 </div>
-                <Link href = "/settings"><Button>Edit Profile</Button></Link>
+                <Link href="/settings">
+                  <Button>Edit Profile</Button>
+                </Link>
               </div>
-              <p className="mb-4">{user.bio}</p>
+              <p className="mb-4">{""}</p>
               <div className="mb-4 flex flex-wrap gap-4 text-sm text-gray-500">
-                {user.location && (
+                {dummyUser.location && (
                   <span className="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -73,12 +98,12 @@ export default function ProfilePage({
                         clipRule="evenodd"
                       />
                     </svg>
-                    {user.location}
+                    {dummyUser.location}
                   </span>
                 )}
-                {user.website && (
+                {dummyUser.website && (
                   <a
-                    href={user.website}
+                    href={dummyUser.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center hover:underline"
@@ -95,10 +120,10 @@ export default function ProfilePage({
                         clipRule="evenodd"
                       />
                     </svg>
-                    {user.website.replace(/^https?:\/\//, "")}
+                    {dummyUser.website.replace(/^https?:\/\//, "")}
                   </a>
                 )}
-                {user.joinDate && (
+                {dummyUser.joinDate && (
                   <span className="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +137,7 @@ export default function ProfilePage({
                         clipRule="evenodd"
                       />
                     </svg>
-                    {user.joinDate}
+                    {dummyUser.joinDate}
                   </span>
                 )}
               </div>

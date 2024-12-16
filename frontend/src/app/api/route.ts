@@ -163,6 +163,7 @@ export async function getUserId(): Promise<number | null> {
 }
 
 export async function PostService(data: PostProviderServiceDto) {
+  redirect("/services_page");
   let experience = 0;
   if (data.yearsOfExperience === "OneToThreeYears") {
     experience = 1;
@@ -197,7 +198,6 @@ export async function PostService(data: PostProviderServiceDto) {
     }
     let result = await response.json();
     console.log(result);
-    redirect("/serviceprovider");
   } catch (error) {
     console.error("Error posting service:", error);
   }
