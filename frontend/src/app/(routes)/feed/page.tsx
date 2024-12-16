@@ -1,10 +1,16 @@
 "use client";
-import React, { createContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import CreateAPostCard from "@/components/large/CreateAPostCard";
 import NavbarLayout from "@/components/navbar-layout";
 import { PostCard } from "@/components/large/PostCard";
 import { getAllPost } from "@/app/api/post/route";
-import { FeedContext as FeedContext1 } from "@/app/(routes)/feed/feedContext";
+import {FeedContext, FeedContext as FeedContext2} from "@/app/(routes)/feed/feedContext";
 
 interface PostImage {
   postImageId: number;
@@ -22,13 +28,16 @@ interface Post {
   postLikes: any[];
   postImages: PostImage[];
 }
+export interface FeedContextType {
+  feed: number;
+  setFeed: Dispatch<SetStateAction<number>>;
+}
 
-export const FeedContext = createContext<number | null>(null);
+
 export default function FeedPage() {
   //TODO: Implement the FeedPage component, Fetch ID and POst
   const [posts, setPosts] = useState([]);
   const [providerService, setProviderService] = useState([]);
-  const [feed, setFeed] = useState(0);
   useEffect(() => {
     const fetchPost = async () => {
       const fetchedPosts = await getAllPost();
@@ -37,10 +46,16 @@ export default function FeedPage() {
     const fetchProviderService = async () => {
       setProviderService(providerService);
     };
+    
+    
 
     fetchProviderService();
     fetchPost();
-  }, [feed]);
+  }, []);
+  const refreshFeed = async () => {
+    const fetchedPosts = await getAllPost();
+    setPosts(fetchedPosts); // Update the state with new posts
+  };
 
   return (
     <>
@@ -51,9 +66,7 @@ export default function FeedPage() {
           <section className="mb12 w-3/4">
             <h2 className="mb-4 text-xl font-semibold">Create a Post</h2>
             <div className="rounded-lg bg-white p-5 shadow-md">
-              <FeedContext1 value={feed}>
-                <CreateAPostCard />
-              </FeedContext1>
+                <CreateAPostCard onPostCreated = {refreshFeed}/> 
             </div>
           </section>
 

@@ -45,14 +45,12 @@ export function PostCard({
   const [isLiked, setIsLiked] = useState(false);
   const [name, setName] = useState("Derrick Binangbang");
   const [avatar, setAvatar] = useState("");
-
   function handleLike() {
     setIsLiked(!isLiked);
   }
 
   function handleService() {
    //TODO FETCH PROVIDERSERVICE ID OR SOMETHING 
-    
   }
 
   return (
@@ -72,11 +70,11 @@ export function PostCard({
       <CardContent className='w-full p-0 '>
         <p className="mb-5 ml-5">{content}</p>
         {images.length > 0 && (
-          <Carousel className="w-full h-full bg-black">
+          <Carousel className="w-full h-full bg-black justify-center items-center">
             <CarouselContent  key={postId}>
               {images.length > 0 &&
                 images.map((image: any) => (
-                  <CarouselItem className="w-full h-full" key={`carousel-item-${image.postImageId}`}>
+                  <CarouselItem className=" flex items-center justify-center" key={`carousel-item-${image.postImageId}`}>
                     <Image
                       key={image.postImageId} // or another unique identifier from your image object
                       src={"/uploads/post/" + image.imagePath} // You should replace with the correct path

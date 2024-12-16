@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useRef, useContext} from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,13 @@ interface FileUploadResult {
   error?: string;
 }
 
-export default function CreateAPostCard() {
+interface CreateAPostCardProps {
+  onPostCreated?: any;
+}
+
+export default function CreateAPostCard({
+  onPostCreated,
+}: CreateAPostCardProps) {
   // State hooks with explicit typing
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -41,7 +47,6 @@ export default function CreateAPostCard() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
-  const feed = useContext('FeedContext');
 
   // Ref for file input
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -153,7 +158,7 @@ export default function CreateAPostCard() {
 
       // Create post (assuming createPost is imported from your API route)
       await createPost(postData);
-
+      onPostCreated();
       // Reset form after successful post
       resetForm();
       setProgress(0);
@@ -193,17 +198,6 @@ export default function CreateAPostCard() {
           accept="image/*"
           onChange={handleFileInputChange}
         />
-
-        <section className="flex flex-col gap-2">
-          <p>Choose Your Service</p>
-          <Input
-            type="text"
-            placeholder="What's on your mind?"
-            className="rounded-xl"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </section>
 
         <section className="flex flex-col gap-2">
           <p>Title</p>
