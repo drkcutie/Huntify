@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using backend.Models.Services;
 using backend.Models.User;
-using backend.Repositories;
-using Microsoft.Extensions.Logging;
 
 namespace backend.Controllers
 {
@@ -13,163 +14,125 @@ namespace backend.Controllers
     [ApiController]
     public class ProviderServiceController : ControllerBase
     {
-        private readonly IProviderServiceRepository _repository;
-        private readonly ILogger<ProviderServiceController> _logger;
+        private readonly SeekrDbContext _context;
 
-        public ProviderServiceController(IProviderServiceRepository repository, ILogger<ProviderServiceController> logger)
+        public ProviderServiceController(SeekrDbContext context)
         {
-            _repository = repository;
-            _logger = logger;
+            _context = context;
         }
 
         // GET: api/ProviderService
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProviderService>>> GetProviderServices()
         {
-            try 
-            {
-                var services = await _repository.GetAllAsync();
-                return Ok(services);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, "An error occurred while retrieving provider services.");
-            }
+            return await _context.ProviderServices.ToListAsync();
         }
 
-    [HttpGet("getProviderServiceID/{serviceProviderId}")]
-    public async Task<ActionResult<List<ProviderService>>> GetProviderServicesByServiceProviderId(int serviceProviderId)
+        [HttpGet("getProviderServiceID")]
+        public async Task<ActionResult<List<ProviderService>>> GetProviderServicesByServiceProviderId([FromQuery]int serviceProviderId)
     {
-        try
-        {
-            var providerServices = await _repository.GetByServiceProviderIdAsync(serviceProviderId);
-
-            if (providerServices == null ||!providerServices.Any())
-            {
-                return NotFound($"No provider services found for service provider ID {serviceProviderId}");
-            }
+        var providerServices = await _context.ProviderServices
+       .Include(ps => ps.Service)
+       .Where(ps => ps.ServiceProviderId == serviceProviderId)
+       .ToListAsync();
 
         return Ok(providerServices);
     }
-    catch (Exception ex)
-    {
-        // Log the exception
-        _logger.LogError(ex, "Error retrieving provider services for service provider {serviceProviderId}", serviceProviderId);
-        return StatusCode(500, "An error occurred while retrieving provider services.");
-    }
-}
 
         // GET: api/ProviderService/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProviderService>> GetProviderService(int id)
         {
-            try 
-            {
-                var providerService = await _repository.GetByIdAsync(id);
-                
-                if (providerService == null)
-                {
-                    return NotFound($"Provider service with ID {id} not found");
-                }
+            var providerService = await _context.ProviderServices.FindAsync(id);
 
-                return Ok(providerService);
-            }
-            catch (Exception ex)
+            if (providerService == null)
             {
-                // Log the exception
-                return StatusCode(500, $"An error occurred while retrieving provider service with ID {id}.");
+                return NotFound();
             }
+
+            return providerService;
         }
 
         // PUT: api/ProviderService/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProviderService(int id, ProviderService providerService)
         {
             if (id != providerService.ProviderServiceId)
             {
-                return BadRequest("Mismatched provider service ID");
+                return BadRequest();
             }
 
-            try 
+            _context.Entry(providerService).State = EntityState.Modified;
+
+            try
             {
-                var exists = await _repository.ExistsAsync(id);
-                if (!exists)
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProviderServiceExists(id))
                 {
-                    return NotFound($"Provider service with ID {id} not found");
+                    return NotFound();
                 }
+                else
+                {
+                    throw;
+                }
+            }
 
-                await _repository.UpdateAsync(providerService);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, $"An error occurred while updating provider service with ID {id}.");
-            }
+            return NoContent();
         }
 
         // POST: api/ProviderService
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ProviderService>> PostProviderService(ProviderService providerService)
         {
-            try 
-            {
-                await _repository.AddAsync(providerService);
-                return CreatedAtAction(nameof(GetProviderService), new { id = providerService.ProviderServiceId }, providerService);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, "An error occurred while creating the provider service.");
-            }
+            _context.ProviderServices.Add(providerService);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProviderService", new { id = providerService.ProviderServiceId }, providerService);
         }
         
         [HttpPost("PostProviderServiceDto")]
         public async Task<ActionResult<ProviderService>> PostProviderServiceDto(PostProviderServiceDto postProviderServiceDto)
         {
-            try 
+            var providerService = new ProviderService
             {
-                var providerService = new ProviderService
-                {
-                    ServiceProviderId = postProviderServiceDto.ServiceProviderId,
-                    ServiceId = postProviderServiceDto.ServiceId,
-                    Rate = postProviderServiceDto.Rate,
-                    RateType = postProviderServiceDto.RateType,
-                    Description = postProviderServiceDto.Description,
-                    YearsOfExperience = postProviderServiceDto.YearsOfExperience
-                };
-                
-                await _repository.AddAsync(providerService);
-                return CreatedAtAction(nameof(GetProviderService), new { id = providerService.ProviderServiceId }, providerService);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, "An error occurred while creating the provider service.");
-            }
+                ServiceProviderId = postProviderServiceDto.ServiceProviderId,
+                ServiceId = postProviderServiceDto.ServiceId,
+                Rate = postProviderServiceDto.Rate,
+                RateType = postProviderServiceDto.RateType,
+                Description = postProviderServiceDto.Description,
+                YearsOfExperience = postProviderServiceDto.YearsOfExperience
+            };
+            
+            _context.ProviderServices.Add(providerService);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProviderService", new { id = providerService.ProviderServiceId }, providerService);
         }
 
         // DELETE: api/ProviderService/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProviderService(int id)
         {
-            try 
+            var providerService = await _context.ProviderServices.FindAsync(id);
+            if (providerService == null)
             {
-                var exists = await _repository.ExistsAsync(id);
-                if (!exists)
-                {
-                    return NotFound($"Provider service with ID {id} not found");
-                }
+                return NotFound();
+            }
 
-                await _repository.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, $"An error occurred while deleting provider service with ID {id}.");
-            }
+            _context.ProviderServices.Remove(providerService);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool ProviderServiceExists(int id)
+        {
+            return _context.ProviderServices.Any(e => e.ProviderServiceId == id);
         }
     }
 }

@@ -63,17 +63,16 @@ namespace backend.Models.User
                 .HasForeignKey(p => p.UserId) // Foreign key in Post table
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete on user deletion
             
-            //One-One relationship between ProviderServices and Posts
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ProviderService)
-                .WithOne() // No navigation property on ProviderService side
+                .WithOne()  // No navigation property on ProviderService side
                 .HasForeignKey<Post>(p => p.ProviderServiceId)
                 .IsRequired();
-
-            modelBuilder.Entity<ProviderService>()
-                .HasOne(ps => ps.Post)
-                .WithOne(p => p.ProviderService)
-                .HasForeignKey<ProviderService>(ps => ps.ProviderServiceId);
+            //
+            // modelBuilder.Entity<ProviderService>()
+            //     .HasOne(ps => ps.Post)
+            //     .WithOne(p => p.ProviderService)
+            //     .HasForeignKey<ProviderService>(ps => ps.ProviderServiceId);
 
             // One-to-Many relationship: UserModel and PostLikes
             modelBuilder.Entity<UserModel>()
