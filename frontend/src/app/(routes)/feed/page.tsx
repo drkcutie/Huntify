@@ -19,6 +19,7 @@ import {
   FeedContext,
   FeedContext as FeedContext2,
 } from "@/app/(routes)/feed/feedContext";
+import { getRole } from "@/app/api/user/route";
 
 interface PostImage {
   postImageId: number;
@@ -26,6 +27,7 @@ interface PostImage {
   postImageOrder: number;
   imagePath: string;
 }
+
 interface Post {
   postId: number;
   userId: number;
@@ -37,6 +39,7 @@ interface Post {
   postLikes: any[];
   postImages: PostImage[];
 }
+
 export interface FeedContextType {
   feed: number;
   setFeed: Dispatch<SetStateAction<number>>;
@@ -48,6 +51,7 @@ export default function FeedPage() {
   const [services, setServices] = useState([]);
   const [serviceProviders, setServiceProviders] = useState([]);
   const [providerService, setProviderService] = useState([]);
+  const [isClient, setClient] = useState(false);
   useEffect(() => {
     const fetchPost = async () => {
       const fetchedPosts = await getAllPost();
@@ -59,7 +63,14 @@ export default function FeedPage() {
       setServiceProviders(fetchedServiceProviders);
       setProviderService(fetchedProviderService);
     };
-
+    const fetchRole = async () => {
+      const fetchedRole = await getRole();
+      console.log("Role is " ,fetchedRole);
+      if (fetchedRole === "Client") {
+        setClient(true);
+      }
+    };
+    fetchRole();
     fetchPost();
   }, []);
   const refreshFeed = async () => {
@@ -73,13 +84,14 @@ export default function FeedPage() {
         <div></div>
         <main className="container mx-auto flex flex-col items-center justify-center px-4 py-8">
           {/* Section 1: Create a Post */}
-          <section className="mb12 w-3/4">
-            <h2 className="mb-4 text-xl font-semibold">Create a Post</h2>
-            <div className="rounded-lg bg-white p-5 shadow-md">
-              <CreateAPostCard onPostCreated={refreshFeed} />
-            </div>
-          </section>
-
+          {!isClient && (
+            <section className="mb12 w-3/4">
+              <h2 className="mb-4 text-xl font-semibold">Create a Post</h2>
+              <div className="rounded-lg bg-white p-5 shadow-md">
+                <CreateAPostCard onPostCreated={refreshFeed} />
+              </div>
+            </section>
+          )}
           <section className="my-5 flex min-h-[500px] w-3/4 flex-col items-center justify-center shadow">
             <div className="flex w-2/3 flex-col gap-6">
               {posts.length > 0 ? (

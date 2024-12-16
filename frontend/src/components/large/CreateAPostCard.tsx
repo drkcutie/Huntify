@@ -43,7 +43,13 @@ interface FileUploadResult {
   error?: string;
 }
 
-export default function CreateAPostCard() {
+interface CreateAPostCardProps {
+  onPostCreated?: () => Promise<void>;
+}
+
+export default function CreateAPostCard({
+  onPostCreated,
+}: CreateAPostCardProps) {
   // State hooks with explicit typing
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -229,10 +235,10 @@ export default function CreateAPostCard() {
         images: filenames,
         providerServiceId: selectedServiceId,
       };
-
+      
       // Create post (assuming createPost is imported from your API route)
       await createPost(postData);
-
+      onPostCreated;
       // Reset form after successful post
       resetForm();
       setProgress(0);
