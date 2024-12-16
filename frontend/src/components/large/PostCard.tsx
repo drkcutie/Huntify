@@ -107,7 +107,7 @@ export function PostCard({
         </div>
       </CardHeader>
       <CardContent className="w-full p-0">
-        <Badge>{serviceName}</Badge>
+        <Badge variant="outline">{serviceName}</Badge>
         <p className="mb-5 ml-5">{content}</p>
         {images.length > 0 && (
           <Carousel className="h-full w-full items-center justify-center bg-black">
